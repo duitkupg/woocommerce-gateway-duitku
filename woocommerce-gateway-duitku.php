@@ -2,10 +2,10 @@
 
 /*
 Plugin Name: Duitku Payment Gateway
-Description: Duitku Payment Gateway Version: 2.11
+Description: Duitku Payment Gateway Version: 2.11.1
 Author: Duitku
-Author: https://www.duitku.com/
-Version: 2.11
+Author URI: https://www.duitku.com/
+Version: 2.11.1
 URI: http://www.duitku.com
 
 improvement 1.3 to 1.4:
@@ -60,9 +60,15 @@ improvement 2.8 to 2.9
 - Add Pos Indonesia.
 
 improvement 2.9 to 2.10
-- Add BRI Virtual Account.
 - Add Bank Neo Commerce.
 - Remove Deprecated Mandiri
+
+improvement 2.10 to 2.11
+- Add BRI Virtual Account.
+- Add QRIS by Nobu.
+
+improvement 2.11 to 2.11.1
+- Improvement for input Phone Number Parameter
 
  */
 
@@ -297,15 +303,15 @@ function woocommerce_duitku_init() {
 				}
 
 				$headers = array('Content-Type' => 'application/json');
-
-				if (self::$validation) {
-				  WC_Gateway_Duitku_Validation::duitkuRequest($params);
-				  
-				}
 				
 				if (self::$sanitized) {
-				  WC_Gateway_Duitku_Sanitized::duitkuRequest($params);
+					WC_Gateway_Duitku_Sanitized::duitkuRequest($params);
 				}
+				
+				if (self::$validation) {
+				  WC_Gateway_Duitku_Validation::duitkuRequest($params);
+				}
+				
 				//check cache payment url
 				// session_start();
 				// if(isset($_SESSION[$params['merchantOrderId']])){

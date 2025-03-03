@@ -101,6 +101,9 @@ Integrating online payments with Duitku is very easy, web integration using our 
 
 == Changelog ==
 
+= 2.11.1 April 20, 2022 =
+-Improvement for input parameter phoneNumber
+
 = 2.11 Mar 17, 2022 =
 -Add BRIVA
 -Add QRIS by Nobu
