@@ -2,9 +2,9 @@
 
 /*
 Plugin Name: Duitku Payment Gateway
-Description: Duitku Payment Gateway Version: 1.7
-Author: PRIYANA ANGGIYAWAN
-Version: 1.7
+Description: Duitku Payment Gateway Version: 2.1
+Author: Duitku Development Team
+Version: 2.1
 URI: http://www.duitku.com
 
 improvement 1.3 to 1.4:
@@ -20,6 +20,14 @@ improvement 1.6 to 1.7:
 - add Credit Card Fasilitator.
 - add fitur fee
 
+improvement 1.7 to 2.0:
+- upgrade API v2
+- add ShopeePay
+- add Indodana
+
+improvement 2.0 to 2.1:
+- Improve Expired Period
+
  */
 
 if (!defined('ABSPATH')) {
@@ -27,6 +35,12 @@ if (!defined('ABSPATH')) {
 }
 
 add_action('plugins_loaded', 'woocommerce_duitku_init', 0);
+
+add_action('wp_enqueue_scripts','dom_manipulate_init');
+
+function dom_manipulate_init() {
+	wp_enqueue_script( 'dom-manipulate-js', plugins_url('/includes/assets/js/dom_manipulate_.js', __FILE__ ));
+}
 
 function woocommerce_duitku_init() {
 	if (!class_exists('WC_Payment_Gateway')) {
@@ -49,7 +63,7 @@ function woocommerce_duitku_init() {
 
 			/** @var WC_Logger Logger instance */
 			public static $log = false;
-			
+
 			public function __construct() {
 
 				//plugin id
@@ -66,17 +80,18 @@ function woocommerce_duitku_init() {
 				$this->redirect_url = WC()->api_request_url('WC_Gateway_' . $this->id);
 
 				//Load settings
-				$this->init_form_fields();
+				// $this->init_form_fields();
 				$this->init_settings();
 
 				// Define user set variables
-				$this->title = $this->settings['title'];
+				$this->title = $this->settings['title'] == null ? "Pembayaran Duitku" : $this->settings['title'];
 				$this->enabled = $this->settings['enabled'];
 				$this->description = $this->settings['description'];
 
 				// set  variables from global configuration
 				$this->apikey = get_option('duitku_api_key');
 				$this->merchantCode = get_option('duitku_merchant_code');
+				$this->expiryPeriod = $this->settings['duitku_expiry_period'] != null ? $this->settings['duitku_expiry_period'] : 1440;
 				self::$log_enabled = get_option('duitku_debug');
 
 				// remove trailing slah and add one for our need.
@@ -88,36 +103,8 @@ function woocommerce_duitku_init() {
 				add_action('woocommerce_update_options_payment_gateways_' . $this->id, array(&$this, 'process_admin_options'));
 
 				// Payment listener/API hook
-				add_action('woocommerce_api_wc_gateway_' . $this->id, array($this, 'check_duitku_response'));		
-				
-			}
-			
-			
-	  
-			/**
-			 * set field for each payment gateway
-			 * @return void
-			 */
-			function init_form_fields() {
+				add_action('woocommerce_api_wc_gateway_' . $this->id, array($this, 'check_duitku_response'));
 
-				$this->form_fields = array(
-					'enabled' => array(
-						'title' => __('Enable/Disable', 'woothemes'),
-						'label' => __('Enable Duitku', 'woothemes'),
-						'type' => 'checkbox', 'description' => '',
-						'default' => 'no',
-					),
-					'title' => array(
-						'title' => __('Title', 'woothemes'), 'type' =>
-						'text', 'description' => __('', 'woothemes'),
-						'default' => __('Pembayaran Duitku', 'woothemes'),
-					),
-					'description' => array(
-						'title' => __('Description', 'woothemes'),
-						'type' => 'textarea', 'description' => __('',
-							'woothemes'), 'default' => 'Sistem pembayaran menggunakan Duitku.',
-					),
-				);
 			}
 
 			public function admin_options() {
@@ -134,27 +121,109 @@ function woocommerce_duitku_init() {
 				$order = new WC_Order($order_id);
 
 				//Total Amount Exclude Fee
-				$totalAmount = intval($order->subtotal); //Exclude
-				
+				$totalAmount = intval($order->order_total); //Exclude
+
 				$this->log('Generating payment form for order ' . $order->get_order_number() . '. Notify URL: ' . $this->redirect_url);
 
 				//endpoint for inquiry
-				$url = $this->endpoint . '/api/merchant/inquiry';
-
-				//generate Signature
-				$signature = md5($this->merchantCode . $order_id . $totalAmount . $this->apikey);
+				$url = $this->endpoint . '/api/merchant/v2/inquiry';
 
 				//merchant user info taken from billing name
 				$current_user = $order->billing_first_name . " " . $order->billing_last_name;
 
-				//record current user who made a transaction for merchant info
-				/*
-				if (is_user_logged_in()) {
-					$current_user = wp_get_current_user()->user_login;
-				} else {
-					$current_user = "GUEST";
+				// foreach ($order->get_items() as $item_key => $item ) {
+				  // $description    = $item->get_name();
+				// }
+
+				// $ProducItem = array(
+					// 'name'		=> substr($description,0, 49),
+					// 'price'		=> $totalAmount,
+					// 'quantity'	=> 1
+				// );
+
+				$item_details = [];
+
+				foreach ($order->get_items() as $item_key => $item ) {
+				  $item_name    = $item->get_name();
+				  $quantity     = $item->get_quantity();
+				  $product_price  = $item->get_subtotal();
+				  // $item_beli = $item;
+
+				  $item_details[] = array(
+					'name' => $item_name,
+					'price' => intval($product_price),
+					'quantity' => $quantity
+				  );
 				}
-				*/				
+
+				// Shipping fee as item_details
+				if( $order->get_total_shipping() > 0 ) {
+				  $item_details[] = array(
+					'name' => 'Shipping Fee',
+					'price' => ceil($order->get_total_shipping()),
+					'quantity' => 1
+				  );
+				}
+
+				// Tax as item_details
+				if( $order->get_total_tax() > 0 ) {
+				  $item_details[] = array(
+					'name' => 'Tax',
+					'price' => ceil($order->get_total_tax()),
+					'quantity' => 1
+				  );
+				}
+
+				// Discount as item_details
+				if ( $order->get_total_discount() > 0) {
+				  $item_details[] = array(
+					'name' => 'Total Discount',
+					'price' => ceil($order->get_total_discount())  * -1,
+					'quantity' => 1
+				  );
+				}
+
+				// Fees as item_details
+				if ( sizeof( $order->get_fees() ) > 0 ) {
+				  $fees = $order->get_fees();
+				  $i = 0;
+				  foreach( $fees as $item ) {
+
+					if ( $item['name'] == __('Surcharge', 'wc-duitku') ) {
+					  $totalAmount = $totalAmount - ceil($item['line_total']);
+					  continue;
+					}
+
+					$item_details[] = array(
+					  'name' => $item['name'],
+					  'price' => ceil($item['line_total']),
+					  'quantity' => 1
+					);
+					$i++;
+				  }
+				}
+
+				$billing_address = array(
+				  'firstName' => $order->billing_first_name,
+				  'lastName' => $order->billing_last_name,
+				  'address' => $order->billing_address_1 . " " . $order->billing_address_2,
+				  'city' => $order->billing_city,
+				  'postalCode' => $order->billing_postcode,
+				  'phone' => $order->billing_phone,
+				  'countryCode' => $order->billing_country
+				);
+
+				$customerDetails = array(
+					'firstName' => $order->billing_first_name,
+					'lastName' => $order->billing_last_name,
+					'email' => $order->billing_email,
+					'phoneNumber' => $order->billing_phone,
+					'billingAddress' => $billing_address,
+					'shippingAddress' => $billing_address
+				);
+
+				//generate Signature
+				$signature = md5($this->merchantCode . $order_id . $totalAmount . $this->apikey);
 
 				// Prepare Parameters
 				$params = array(
@@ -165,19 +234,22 @@ function woocommerce_duitku_init() {
 					'productDetails' => get_bloginfo() . ' Order : #' . $order_id,
 					'additionalParam' => '',
 					'merchantUserInfo' => $current_user,
+					'customerVaName' => $current_user,
 					'email' => $order->billing_email,
 					'phoneNumber' => $order->billing_phone,
 					'signature' => $signature,
-					//'returnUrl' => esc_url_raw( add_query_arg( 'utm_nooverride', '1', $this->get_return_url( $order ) ) ),
+					'expiryPeriod' => $this->expiryPeriod,
 					'returnUrl' => $this->redirect_url . '?status=notify',
 					'callbackUrl' => $this->redirect_url,
+					'customerDetail' => $customerDetails,
+					'itemDetails' => $item_details
 				);
 
 				$headers = array('Content-Type' => 'application/json');
 
 				// show request for inquiry
 				$this->log("create a request for inquiry");
-				$this->log(var_export($params, true));
+				$this->log(json_encode($params, true));
 
 				// Send this payload to Authorize.net for processing
 				$response = wp_remote_post($url, array(
@@ -201,7 +273,7 @@ function woocommerce_duitku_init() {
 
 				// Parse the response into something we can read
 				$resp = json_decode($response_body);
-				
+
 				//log response from server
 				$this->log('response body: ' . $response_body);
 				$this->log('response code: ' . $response_code);
@@ -213,7 +285,7 @@ function woocommerce_duitku_init() {
 
 					//save reference Code from duitku
 					$this->log('Inquiry Success for order Id ' . $order->get_order_number() . ' with reference number ' . $resp->reference);
-					if($this->payment_method == 'BT')
+					if($this->payment_method == 'BT' || $this->payment_method == 'SO')
 					{
 						WC()->cart->empty_cart();
 					}
@@ -221,7 +293,7 @@ function woocommerce_duitku_init() {
 					// store Url as $Order metadata
 					  $order->update_meta_data('_duitku_payment_reference',$resp->reference);
 					  $order->save();
-					  
+
 					// Redirect to thank you page
 					return array(
 						'result' => 'success', 'redirect' => $resp->paymentUrl,
@@ -230,8 +302,8 @@ function woocommerce_duitku_init() {
 					$this->log('Inquiry failed for order Id ' . $order->get_order_number());
 					// Transaction was not succesful Add notice to the cart
 
-					if ($response_code = "400") {	
-						wc_add_notice($resp->Message, 'error');					
+					if ($response_code = "400") {
+						wc_add_notice($resp->Message, 'error');
 						// Add note to the order for your reference
 						$order->add_order_note( 'Error:' .  $resp->Message);
 					}
@@ -249,8 +321,6 @@ function woocommerce_duitku_init() {
 			 * @return null
 			 */
 			function check_duitku_response() {
-
-				$this->log("masuk ke check duitku response.");
 
 				if (empty($_REQUEST['resultCode']) || empty($_REQUEST['merchantOrderId']) || empty($_REQUEST['reference'])) {
 					throw new Exception(__('wrong query string please contact admin.',
@@ -285,7 +355,7 @@ function woocommerce_duitku_init() {
 			}
 
 			function notify_response() {
-				
+
 				// log request from server
 				$this->log(var_export($_REQUEST, true));
 
@@ -302,16 +372,15 @@ function woocommerce_duitku_init() {
 					wc_add_notice('pembayaran dengan duitku telah berhasil.');
             				return wp_redirect($order->get_checkout_order_received_url());
 				}else if ($_REQUEST['resultCode'] == '01') {
-					wc_add_notice('pembayaran dengan duitku sedang diproses.');
-							
-            				//return wp_redirect($order->get_checkout_order_received_url());
-							// WC()->cart->empty_cart();
+							wc_add_notice('pembayaran dengan duitku sedang diproses.');
+							WC()->cart->empty_cart();
+
+            				// return wp_redirect(wc_get_endpoint_url( 'order-received', '', wc_get_page_permalink( 'checkout' ) ));
 							wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
 				} else {
 					wc_add_notice('pembayaran dengan duitku gagal.', 'error');
             				return wp_redirect($order->get_checkout_payment_url(false));
 				}
-				//return wp_redirect($this->get_return_url(new WC_Order($order_id)));
 			}
 
 			/**
@@ -405,6 +474,10 @@ function woocommerce_duitku_init() {
 		$methods[] = 'WC_Gateway_Duitku_VA_CIMB_Niaga';
 		$methods[] = 'WC_Gateway_Duitku_VA_Maybank';
 		$methods[] = 'WC_Gateway_Duitku_VA_Ritel';
+		$methods[] = 'WC_Gateway_Duitku_SHOPEE';
+		$methods[] = 'WC_Gateway_Duitku_INDODANA';
+		$methods[] = 'WC_Gateway_Duitku_SHOPEEPAY_APPLINK';
+		$methods[] = 'WC_Gateway_Duitku_LINKAJA_APPLINK';
 		return $methods;
 	}
 

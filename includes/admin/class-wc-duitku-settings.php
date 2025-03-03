@@ -25,22 +25,21 @@ if (!defined('ABSPATH')) {
 class Duitku_Settings {
 
 	public static $tab_name = 'duitku_settings';
-	public static $option_prefix = 'duitku';	
+	public static $option_prefix = 'duitku';
 	public static function init() {
 		$request = $_REQUEST;
 		add_filter('woocommerce_settings_tabs_array', array(__CLASS__, 'add_duitku_settings_tab'), 50);
 		add_action('woocommerce_settings_tabs_duitku_settings', array(__CLASS__, 'duitku_settings_page'));
 		add_action('woocommerce_update_options_duitku_settings', array(__CLASS__, 'update_duitku_settings'));
-		//      add_action( 'admin_enqueue_scripts', array(__CLASS__ , 'enqueue_scripts' ) );
 		add_action( 'woocommerce_cart_calculate_fees', array(__CLASS__, 'wp_add_checkout_fees') );
 		add_action( 'woocommerce_review_order_before_payment', array(__CLASS__, 'wp_refresh_checkout_on_payment_methods_change') );
 		add_action( 'woocommerce_view_order', array(__CLASS__, 'view_order_and_thankyou_page' ), 1, 1);
 		add_action('woocommerce_thankyou', array(__CLASS__, 'view_order_and_thankyou_page' ), 1, 1);
-		
+
 		//load fee API before page checkout
 		add_action('woocommerce_review_order_before_payment', array(__CLASS__, 'fee' ), 1, 1);
 	}
-	
+
 	/**
 	* Hook function that will be called on thank you page
 	* Output HTML for payment/instruction URL
@@ -49,12 +48,12 @@ class Duitku_Settings {
 	*/
 	public function view_order_and_thankyou_page( $order_id ) {
 		if ( !$order_id ) return;
-		
+
 		$order = new WC_Order( $order_id );
 		$reference = get_post_meta($order->id, '_duitku_payment_reference', true);
 
 		echo "<h2>Payment Info</h2>
-			  <table class='woocommerce-table shop_table midtrans_payment_info'>
+			  <table class='woocommerce-table shop_table'>
 				  <tbody>
 					<tr>
 						<th scope='row'>Reference:</th>
@@ -63,63 +62,96 @@ class Duitku_Settings {
 				</tbody>
 			</table>";
 	}
-	
+
 	// add fee
-	public function wp_add_checkout_fees( ) {
+	public function wp_add_checkout_fees(  $order_id ) {
 		if ( is_admin() && ! defined( 'DOING_AJAX' ) )
 			return;
-		
+
+		self::fee();
+
 		$chosen_gateway = WC()->session->get( 'chosen_payment_method' );
+
+
 		if ( $chosen_gateway == 'duitku_ovo' ) {
-			WC()->cart->add_fee( 'Surcharge', self::get_fee('OV') );
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('OV') );
 		} else
 		if ( $chosen_gateway == 'duitku_credit_card' ) {
-			WC()->cart->add_fee( 'Surcharge', self::get_fee('VC') );
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('VC') );
 		} else
 		if ( $chosen_gateway == 'duitku_credit_card_so' ) {
-			WC()->cart->add_fee( 'Surcharge', self::get_fee('SO') );
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('SO') );
 		} else
 		if ( $chosen_gateway == 'duitku_bca' ) {
-			WC()->cart->add_fee( 'Surcharge', self::get_fee('BK') );
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('BK') );
 		} else
 		if ( $chosen_gateway == 'duitku_va_permata' ) {
-			WC()->cart->add_fee( 'Surcharge', self::get_fee('BT') );
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('BT') );
 		} else
 		if ( $chosen_gateway == 'duitku_va_atm_bersama' ) {
-			WC()->cart->add_fee( 'Surcharge', self::get_fee('A1') );
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('A1') );
 		} else
 		if ( $chosen_gateway == 'duitku_va_bni' ) {
-			WC()->cart->add_fee( 'Surcharge', self::get_fee('I1') );
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('I1') );
 		} else
 		if ( $chosen_gateway == 'duitku_va_mandiri' ) {
-			WC()->cart->add_fee( 'Surcharge', self::get_fee('M1') );
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('M1') );
 		} else
 		if ( $chosen_gateway == 'duitku_va_cimb_niaga' ) {
-			WC()->cart->add_fee( 'Surcharge', self::get_fee('B1') );
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('B1') );
 		} else
 		if ( $chosen_gateway == 'duitku_va_maybank' ) {
-			WC()->cart->add_fee( 'Surcharge', self::get_fee('VA') );
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('VA') );
 		} else
 		if ( $chosen_gateway == 'duitku_va_ritel' ) {
-			WC()->cart->add_fee( 'Surcharge', self::get_fee('FT') );
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('FT') );
+		}else
+		if ( $chosen_gateway == 'duitku_shopee' ) {
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('SP') );
+		}else
+		if ( $chosen_gateway == 'duitku_indodana' ) {
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('DN') );
+		}else
+		if ( $chosen_gateway == 'duitku_shopeepay_applink' ) {
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('SA') );
+		}else
+		if ( $chosen_gateway == 'duitku_linkaja_applink' ) {
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('LA') );
 		}
 	}
-			
+
 	// assign fee
 	public function fee() {
+		WC()->session->set('paymentFee', 0);
+
+		$feeAmount = 0;
+		if ( sizeof( WC()->cart->get_fees() ) > 0 ) {
+		  $fees = WC()->cart->get_fees();
+		  $i = 0;
+		  foreach( $fees as $item ) {
+
+			if ( $item->name == __('Surcharge', 'wc-duitku') ) {
+			  continue;
+			}
+
+			$feeAmount = ceil($item->amount);
+		  }
+		}
 
 		$endpoint	= rtrim(get_option('duitku_endpoint'), '/');
-		$amount		= CEIL(WC()->cart->cart_contents_total);
-		
+		$amount		= CEIL( WC()->cart->cart_contents_total + WC()->cart->shipping_total - WC()->cart->tax_total + $feeAmount );
+		$datetime	= date('Y-m-d H:i:s', time());
+
 		//endpoint for checkfee
 		$url = $endpoint . '/api/merchant/paymentmethod/getpaymentmethod';
 
 		//generate Signature
-		$signature = hash('sha256', get_option('duitku_merchant_code') . $amount . get_option('duitku_api_key'));
+		$signature = hash('sha256', get_option('duitku_merchant_code') . $amount . $datetime . get_option('duitku_api_key'));
 		// Prepare Parameters
 		$params = array(
 			'merchantCode'	=> get_option('duitku_merchant_code'),
 			'amount' 		=> $amount,
+			'datetime' 		=> $datetime,
 			'signature'		=> $signature
 		);
 
@@ -149,20 +181,23 @@ class Duitku_Settings {
 
 		return false;
 	}
-	
+
 	// GET fee session
 	private function get_fee($paymentMethod){
 		$json = WC()->session->get('paymentFee');
-		
+
+		if ( empty($json) ) {
+			return;
+		}
 		foreach($json as $data){
 			if ($data->paymentMethod != $paymentMethod) continue;
-			
+
 			$fee =  $data->totalFee;
 		}
-		
+
 		return $fee;
 	}
-			
+
 	// reload checkout on payment gateway change
 	public function wp_refresh_checkout_on_payment_methods_change(){
 		?>
@@ -176,7 +211,7 @@ class Duitku_Settings {
 		</script>
 		<?php
 	}
-	
+
 	/**
 	 * Validate the data for Duitku global configuration
 	 *

@@ -5,9 +5,9 @@
  }
 
 /**
- * Duitku BCA Klikpay
+ * Duitku INDODANA
  *
- * This gateway is used for processing BCA Klikpay online payment
+ * This gateway is used for processing online payment using INDODANA.
  *
  * Copyright (c) Duitku
  *
@@ -15,21 +15,21 @@
  * you have found this script useful a small recommendation as well as a
  * comment on merchant form would be greatly appreciated.
  *
- * @class       WC_Gateway_Duitku_bca
+ * @class       WC_Gateway_Duitku_INDODANA
  * @extends     Duitku_Payment_Gateway
  * @package     Duitku/Classes/Payment
  * @author      Duitku
  * @located at  /includes/gateways
  */
 
- class WC_Gateway_Duitku_BCA extends Duitku_Payment_Gateway {
-    var $sub_id = 'duitku_bca';
+ class WC_Gateway_Duitku_INDODANA extends Duitku_Payment_Gateway {
+    var $sub_id = 'duitku_indodana';
         public function __construct() {
 	    parent::__construct();
-            $this->method_title = 'Duitku BCA Klikpay';
-	    $this->payment_method = 'BK';
+            $this->method_title = 'Duitku INDODANA';
+	    $this->payment_method = 'DN';
 	    //payment gateway logo
-	    $this->icon = plugins_url('/assets/bca-klikpay.png', dirname(__FILE__) );
+	    $this->icon = plugins_url('/assets/indodana.png', dirname(__FILE__) );
 		
 		//Load settings
 		$this->init_form_fields();
@@ -63,7 +63,8 @@
 			),
 		);
 	}
+	
  }
- //$obj = new WC_Gateway_Duitku_Mandiri;
+ //$obj = new WC_Gateway_Duitku_OVO;
 
 ?>
