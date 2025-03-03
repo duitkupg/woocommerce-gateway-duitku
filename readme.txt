@@ -3,7 +3,7 @@
 Plugin Name:  Duitku Payment Gateway
 Plugin URI:   https://developer.wordpress.org/plugins/the-basics/
 Description:  Duitku Payment Gateway 
-Version:      2.2
+Version:      2.3
 Author:       Duitku Development Team
 
 Author URI:   http://duitku.com
@@ -18,6 +18,11 @@ Install & activate the plugin. Modify some options in the settings page to suits
 
 -
 == Changelog ==
+
+= 2.3 Oct 12, 2020 =
+
+improvement 2.2 to 2.3
+- Add BCA Virtual Account
 
 = 2.2 June 17, 2020 = 
 

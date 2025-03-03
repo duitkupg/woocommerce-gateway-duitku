@@ -2,9 +2,9 @@
 
 /*
 Plugin Name: Duitku Payment Gateway
-Description: Duitku Payment Gateway Version: 2.2
+Description: Duitku Payment Gateway Version: 2.3
 Author: Duitku Development Team
-Version: 2.2
+Version: 2.3
 URI: http://www.duitku.com
 
 improvement 1.3 to 1.4:
@@ -31,6 +31,9 @@ improvement 2.0 to 2.1:
 improvement 2.1 to 2.2:
 - Add ShopeePay Applink & LinkAja Applink
 - Add observer & mutation for detect device
+
+improvement 2.2 to 2.3:
+- Add BCA Virtual Account
 
  */
 
@@ -474,6 +477,7 @@ function woocommerce_duitku_init() {
 		$methods[] = 'WC_Gateway_Duitku_VA_Permata';
 		$methods[] = 'WC_Gateway_Duitku_VA_ATM_Bersama';
 		$methods[] = 'WC_Gateway_Duitku_VA_BNI';
+		$methods[] = 'WC_Gateway_Duitku_VA_BCA';
 		$methods[] = 'WC_Gateway_Duitku_VA_MANDIRI';
 		$methods[] = 'WC_Gateway_Duitku_VA_CIMB_Niaga';
 		$methods[] = 'WC_Gateway_Duitku_VA_Maybank';

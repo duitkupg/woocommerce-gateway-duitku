@@ -117,6 +117,9 @@ class Duitku_Settings {
 		}else
 		if ( $chosen_gateway == 'duitku_linkaja_applink' ) {
 			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('LA') );
+		}else
+		if ( $chosen_gateway == 'duitku_va_bca' ) {
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('BC') );
 		}
 	}
 
