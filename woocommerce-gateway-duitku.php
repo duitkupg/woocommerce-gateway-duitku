@@ -2,9 +2,9 @@
 
 /*
 Plugin Name: Duitku Payment Gateway
-Description: Duitku Payment Gateway Version: 2.3
+Description: Duitku Payment Gateway Version: 2.4
 Author: Duitku Development Team
-Version: 2.3
+Version: 2.4
 URI: http://www.duitku.com
 
 improvement 1.3 to 1.4:
@@ -34,6 +34,9 @@ improvement 2.1 to 2.2:
 
 improvement 2.2 to 2.3:
 - Add BCA Virtual Account
+
+improvement 2.3 to 2.4
+- Change Logo Indodana
 
  */
 
@@ -91,14 +94,14 @@ function woocommerce_duitku_init() {
 				$this->init_settings();
 
 				// Define user set variables
-				$this->title = $this->settings['title'] == null ? "Pembayaran Duitku" : $this->settings['title'];
-				$this->enabled = $this->settings['enabled'];
-				$this->description = $this->settings['description'];
+				$this->title = (isset($this->settings['title'])) ? $this->settings['title'] : "Pembayaran Duitku";
+				$this->enabled = (isset($this->settings['enabled'])) ? $this->settings['enabled'] : false;
+				$this->description = (isset($this->settings['description'])) ? $this->settings['description'] : "";				
 
 				// set  variables from global configuration
 				$this->apikey = get_option('duitku_api_key');
 				$this->merchantCode = get_option('duitku_merchant_code');
-				$this->expiryPeriod = $this->settings['duitku_expiry_period'] != null ? $this->settings['duitku_expiry_period'] : 1440;
+				$this->expiryPeriod = (isset($this->settings['duitku_expiry_period'])) ? $this->settings['duitku_expiry_period'] : 1440;
 				self::$log_enabled = get_option('duitku_debug');
 
 				// remove trailing slah and add one for our need.
@@ -298,7 +301,7 @@ function woocommerce_duitku_init() {
 					}
 
 					// store Url as $Order metadata
-					  $order->update_meta_data('_duitku_payment_reference',$resp->reference);
+					  $order->update_meta_data('_duitku_pg_reference',$resp->reference);
 					  $order->save();
 
 					// Redirect to thank you page
