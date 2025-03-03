@@ -54,6 +54,7 @@ Supported Payment Channels :
 28. Jenius Pay
 29. Bank Sahabat Sampoerna
 30. Danamon Virtual Account
+31. BSI Virtual Account
 
 == Installation ==
 
@@ -104,6 +105,11 @@ Integrating online payments with Duitku is very easy, web integration using our 
 4. Duitku Global Configuration Settings
 
 == Changelog ==
+
+= 2.11.10 June 10, 2024 =
+-Add new payment BSI VA
+-Adjustment for order total exclude fee to include fee
+
 = 2.11.9 Mei 2, 2024 =
 -Re-add Sampoerna VA
 -Add new payment Danamon VA

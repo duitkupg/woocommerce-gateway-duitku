@@ -95,6 +95,10 @@ improvement 2.11.7 to 2.11.8
 improvement 2.11.8 to 2.11.9
 -Re-add Sampoerna Bank
 -Add new Payment Danamon VA
+
+improvement 2.11.9 to 2.11.10
+-Add new payment BSI VA
+-Adjustment for order total exclude fee to include fee
  */
 
 if (!defined('ABSPATH')) {
@@ -194,12 +198,13 @@ function woocommerce_duitku_init() {
 			public function process_fees($order, $item_details) {
 				
 				$item_details = $item_details;
-				$totalAmount = intval($order->order_total);
+				$totalAmount = intval($order->order_total); //includes fee
 
 				if (sizeof($order->get_fees()) > 0) {
 					$fees = $order->get_fees();
 					foreach ($fees as $item) {
 
+						// exclude surcharge
 						if ($item['name'] == __('Surcharge', 'wc-duitku')) {
 							$totalAmount -= round($item['line_total']);
 							continue;
@@ -211,7 +216,8 @@ function woocommerce_duitku_init() {
 							'quantity' => 1
 						);
 
-						$totalAmount += round($item['line_total']);
+						// In case your fee calculation is missed you might need uncomment code below
+						// $totalAmount += round($item['line_total']); //comment to ignore fee calculation
 					}
 				}
 
@@ -230,8 +236,8 @@ function woocommerce_duitku_init() {
 				$this->log("Cek tanggal" . $order->order_date);
 
 
-				//Total Amount Exclude Fee
-				$totalAmount = intval($order->order_total); //Exclude
+				//Total Amount Include Fee
+				$totalAmount = intval($order->order_total); //Include
 
 				$this->log('Generating payment form for order ' . $order->get_order_number() . '. Notify URL: ' . $this->redirect_url);
 
@@ -652,6 +658,7 @@ function woocommerce_duitku_init() {
 		$methods[] = 'WC_Gateway_Duitku_JENIUS_PAY';
 		$methods[] = 'WC_Gateway_Duitku_GUDANG_VOUCHER_QRIS';
 		$methods[] = 'WC_Gateway_Duitku_VA_DANAMON_H2H';
+		$methods[] = 'WC_Gateway_Duitku_VA_BSI';
 		return $methods;
 	}
 

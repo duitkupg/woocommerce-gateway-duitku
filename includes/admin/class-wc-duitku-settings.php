@@ -165,6 +165,9 @@ class Duitku_Settings {
 		if ( $chosen_gateway == 'duitku_va_danamon_h2h') {
 			WC()->cart->add_fee(__('Surcharge', 'wc-duitku'), self::get_fee('DM') );
 		}
+		if ( $chosen_gateway == 'duitku_va_bsi') {
+			WC()->cart->add_fee(__('Surcharge', 'wc-duitku'), self::get_fee('DM') );
+		}
 	}
 
 	// assign fee
