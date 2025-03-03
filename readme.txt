@@ -3,7 +3,7 @@
 PPlugin Name:  Duitku Payment Gateway
 Plugin URI:   https://docs.duitku.com/#woocommerce-duitku
 Description:  Duitku Payment Gateway 
-Version:      2.11.8
+Version:      2.11.9
 Author:       Duitku Development Team
 Contributors: anggiyawan@duitku.com, hanithiojuwono, rayhanduitku
 Author URI:   http://duitku.com
@@ -52,6 +52,8 @@ Supported Payment Channels :
 26.	ATOME
 27. Gudang Voucher QRIS
 28. Jenius Pay
+29. Bank Sahabat Sampoerna
+30. Danamon Virtual Account
 
 == Installation ==
 
@@ -102,6 +104,10 @@ Integrating online payments with Duitku is very easy, web integration using our 
 4. Duitku Global Configuration Settings
 
 == Changelog ==
+= 2.11.9 Mei 2, 2024 =
+-Re-add Sampoerna VA
+-Add new payment Danamon VA
+
 = 2.11.8 April 3, 2024 =
 -Fix process fees in signature validation
 

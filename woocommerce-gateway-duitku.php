@@ -2,10 +2,10 @@
 
 /*
 Plugin Name: Duitku Payment Gateway
-Description: Duitku Payment Gateway Version: 2.11.8
+Description: Duitku Payment Gateway Version: 2.11.9
 Author: Duitku
 Author URI: https://www.duitku.com/
-Version: 2.11.8
+Version: 2.11.9
 URI: http://www.duitku.com
 
 improvement 1.3 to 1.4:
@@ -80,7 +80,7 @@ removing feature 2.11.3 to 2.11.4
 - Remove Sampoerna VA 
 
 improvement 2.11.4 to 2.11.5
-- Add new Payment Jenius Pay
+- Add new Gudang Voucher QRIS
 
 improvement 2.11.5 to 2.11.6
 - Add new Payment Jenius Pay
@@ -91,6 +91,10 @@ improvement 2.11.6 to 2.11.7
 
 improvement 2.11.7 to 2.11.8
 -fix process fees in signature validation
+
+improvement 2.11.8 to 2.11.9
+-Re-add Sampoerna Bank
+-Add new Payment Danamon VA
  */
 
 if (!defined('ABSPATH')) {
@@ -463,6 +467,7 @@ function woocommerce_duitku_init() {
 				$reqSignature = wc_clean(stripslashes($params['signature']));
 
 				$order = new WC_Order($order_id);
+				
 				$item_details = [];
 				
 				$fees_data = $this->process_fees($order, $item_details);
@@ -490,20 +495,20 @@ function woocommerce_duitku_init() {
 					}else{
 						$this->log("Callback diterima dengan result code " . $result_Code . " untuk Order ID " . $order_id . " dan hasil validasi cek transaksi status code " . $respon->statusCode);
 					}
-					}else if($result_Code == "01"){
-						$respon = json_decode($this->validate_transaction($this->prefix . $order_id));
-						if($respon->statusCode == "02"){
-							$order->update_status("failed");
-							$order->add_order_note("Pembayaran dengan Duitku gagal");
-							$this->log("Pembayaran dengan order ID " . $order_id . "gagal");
-						}else if($respon->statusCode == "01"){
-							$this->log("Pembayaran dengan order ID " . $order_id . " tertunda.");
-						}else{
-							$this->log("Callback diterima dengan result code " . $result_Code . " untuk Order ID " . $order_id . " dan hasil validasi cek transaksi status code " . $respon->statusCode);
-						}
+				}else if($result_Code == "01"){
+					$respon = json_decode($this->validate_transaction($this->prefix . $order_id));
+					if($respon->statusCode == "02"){
+						$order->update_status("failed");
+						$order->add_order_note("Pembayaran dengan Duitku gagal");
+						$this->log("Pembayaran dengan order ID " . $order_id . "gagal");
+					}else if($respon->statusCode == "01"){
+						$this->log("Pembayaran dengan order ID " . $order_id . " tertunda.");
 					}else{
-							$this->log("Callback diterima dengan result code " . $result_Code . " untuk Order ID " . $order_id);
+						$this->log("Callback diterima dengan result code " . $result_Code . " untuk Order ID " . $order_id . " dan hasil validasi cek transaksi status code " . $respon->statusCode);
 					}
+				}else{
+						$this->log("Callback diterima dengan result code " . $result_Code . " untuk Order ID " . $order_id);
+				}
 
 				exit;
 			}
@@ -636,6 +641,7 @@ function woocommerce_duitku_init() {
 		$methods[] = 'WC_Gateway_Duitku_LINKAJA_APPLINK';
 		$methods[] = 'WC_Gateway_Duitku_DANA';
 		$methods[] = 'WC_Gateway_Duitku_VA_ARTHA';
+		$methods[] = 'WC_Gateway_Duitku_VA_SAMPOERNA';
 		$methods[] = 'WC_Gateway_Duitku_LINKAJA_QRIS';
 		$methods[] = 'WC_Gateway_Duitku_INDOMARET';
 		$methods[] = 'WC_Gateway_Duitku_POS';
@@ -645,6 +651,7 @@ function woocommerce_duitku_init() {
 		$methods[] = 'WC_Gateway_Duitku_ATOME';
 		$methods[] = 'WC_Gateway_Duitku_JENIUS_PAY';
 		$methods[] = 'WC_Gateway_Duitku_GUDANG_VOUCHER_QRIS';
+		$methods[] = 'WC_Gateway_Duitku_VA_DANAMON_H2H';
 		return $methods;
 	}
 

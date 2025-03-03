@@ -5,9 +5,9 @@
  }
 
 /**
- * Duitku Gudang Voucher QRIS
+ * Duitku VA DANAMON HOST TO HOST
  *
- * This gateway is used for processing online payment using ShopeePay
+ * This gateway is used for processing online payment using VA DANAMON H2H
  *
  * Copyright (c) Duitku
  *
@@ -15,66 +15,67 @@
  * you have found this script useful a small recommendation as well as a
  * comment on merchant form would be greatly appreciated.
  *
- * @class       WC_Gateway_Duitku_GUDANG_VOUCHER_QRIS
+ * @class       WC_Gateway_Duitku_VA_DANAMON_H2H
  * @extends     Duitku_Payment_Gateway
  * @package     Duitku/Classes/Payment
  * @author      Duitku
  * @located at  /includes/gateways
  */
 
- class WC_Gateway_Duitku_GUDANG_VOUCHER_QRIS extends Duitku_Payment_Gateway {
-    var $sub_id = 'duitku_gudang_voucher_qris';
+ class WC_Gateway_Duitku_VA_DANAMON_H2H extends Duitku_Payment_Gateway {
+    var $sub_id = 'duitku_va_danamon_h2h';
         public function __construct() {
 	    parent::__construct();
-		$this->method_title = 'Duitku Gudang Voucher QRIS';
-	    $this->payment_method = 'GQ';
+            $this->method_title = 'Duitku VA Danamon';
+	    $this->payment_method = 'DM';
 	    //payment gateway logo
-	    $this->icon = plugins_url('/assets/gudang_voucher_qris.png', dirname(__FILE__) );
-
+	    $this->icon = plugins_url('/assets/danamon.png', dirname(__FILE__) );
+		
 		//Load settings
 		$this->init_form_fields();
 		$this->init_settings();
 	}
-
+	
 	/**
 	 * set field for each payment gateway
 	 * @return void
 	 */
 	function init_form_fields() {
-
+			
 		$this->form_fields = array(
 			'enabled' => array(
 				'title' => __('Enable/Disable', 'wc-duitku'),
 				'label' => __('Enable Duitku', 'wc-duitku'),
 				'type' => 'checkbox', 'description' => '',
 				'default' => 'no',
+				'disabled' => 'true',
 			),
 			'title' => array(
-				'title' => __('Title', 'wc-duitku'),
-				'type' => 'text',
+				'title' => __('Title', 'wc-duitku'), 
+				'type' => 'text', 
 				'description' => __('', 'wc-duitku'),
 				'default' => __('Pembayaran Duitku', 'wc-duitku'),
 			),
 			'description' => array(
 				'title' => __('Description', 'wc-duitku'),
-				'type' => 'textarea',
-				'description' => __('', 'wc-duitku'),
+				'type' => 'textarea', 
+				'description' => __('', 'wc-duitku'), 
 				'default' => 'Sistem pembayaran menggunakan Duitku.',
 			),
 			'duitku_expiry_period' => array(
 				'title' => __('Expired Period', 'wc-duitku'),
 				'type' => 'number',
 				'text', 'description' => __('', 'wc-duitku'),
-				'description' => __('Masa berlaku transaksi sebelum kedaluwarsa. example <code>1 - 60 ( menit )</code>', 'wc-duitku'),
-				'default' => __('5', 'wc-duitku'),
+				'description' => __('Masa berlaku transaksi sebelum kedaluwarsa. example <code>1 - 1440 ( menit )</code>', 'wc-duitku'),
+				'default' => __('1440', 'wc-duitku'),
 				'custom_attributes' => array(
 					'min'       =>  1,
-					'max'       =>  60,
+					'max'       =>  1440,
 				),
 			),
 		);
 	}
-
+	
  }
 
 ?>

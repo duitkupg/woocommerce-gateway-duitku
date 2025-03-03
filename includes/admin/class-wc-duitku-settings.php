@@ -156,6 +156,15 @@ class Duitku_Settings {
 		if ( $chosen_gateway == 'duitku_gudang_voucher_qris' ) {
 			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('GQ') );
 		}
+		if ( $chosen_gateway == 'duitku_va_sampoerna' ) {
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('S1') );
+		}
+		if ( $chosen_gateway == 'duitku_va_artha' ) {
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('AG') );
+		}
+		if ( $chosen_gateway == 'duitku_va_danamon_h2h') {
+			WC()->cart->add_fee(__('Surcharge', 'wc-duitku'), self::get_fee('DM') );
+		}
 	}
 
 	// assign fee
