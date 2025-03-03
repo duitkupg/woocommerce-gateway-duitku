@@ -2,10 +2,10 @@
 
 /*
 Plugin Name: Duitku Payment Gateway
-Description: Duitku Payment Gateway Version: 2.11.3
+Description: Duitku Payment Gateway Version: 2.11.4
 Author: Duitku
 Author URI: https://www.duitku.com/
-Version: 2.11.3
+Version: 2.11.4
 URI: http://www.duitku.com
 
 improvement 1.3 to 1.4:
@@ -75,6 +75,9 @@ improvement 2.11.1 to 2.11.2
 
 improvement 2.11.2 to 2.11.3
 - Add new Payment ATOME
+
+removing feature 2.11.3 to 2.11.4
+- Remove Sampoerna VA 
 
  */
 
@@ -573,7 +576,6 @@ function woocommerce_duitku_init() {
 		$methods[] = 'WC_Gateway_Duitku_LINKAJA_APPLINK';
 		$methods[] = 'WC_Gateway_Duitku_DANA';
 		$methods[] = 'WC_Gateway_Duitku_VA_ARTHA';
-		$methods[] = 'WC_Gateway_Duitku_VA_SAMPOERNA';
 		$methods[] = 'WC_Gateway_Duitku_LINKAJA_QRIS';
 		$methods[] = 'WC_Gateway_Duitku_INDOMARET';
 		$methods[] = 'WC_Gateway_Duitku_POS';

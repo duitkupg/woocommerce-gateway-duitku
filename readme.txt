@@ -3,7 +3,7 @@
 PPlugin Name:  Duitku Payment Gateway
 Plugin URI:   https://docs.duitku.com/#woocommerce-duitku
 Description:  Duitku Payment Gateway 
-Version:      2.11.3
+Version:      2.11.4
 Author:       Duitku Development Team
 Contributors: anggiyawan@duitku.com, hanithiojuwono, rayhanduitku
 Author URI:   http://duitku.com
@@ -40,16 +40,15 @@ Supported Payment Channels :
 14.	Shopee Pay
 15.	Shopee Pay Apps
 16.	Bank Artha Graha
-17.	Bank Sahabat Sampoerna
-18.	LinkAja Apps (Percentage Fee)
-19.	LinkAja Apps (Fixed Fee)
-20.	DANA
-21.	LinkAja QRIS
-22.	Indomaret
-23.	PosPay
-24.	BNC
-25.	BRIVA
-26.	QRIS by Nobu
+17.	LinkAja Apps (Percentage Fee)
+18.	LinkAja Apps (Fixed Fee)
+19.	DANA
+20.	LinkAja QRIS
+21.	Indomaret
+22.	PosPay
+23.	BNC
+24.	BRIVA
+25.	QRIS by Nobu
 26.	ATOME
 
 == Installation ==
@@ -101,6 +100,9 @@ Integrating online payments with Duitku is very easy, web integration using our 
 4. Duitku Global Configuration Settings
 
 == Changelog ==
+= 2.11.4 January 05, 2022 =
+-Remove Sampoerna VA 
+
 = 2.11.3 Aug 31, 2022 =
 -Add new payment ATOME 
 
