@@ -3,14 +3,14 @@
 PPlugin Name:  Duitku Payment Gateway
 Plugin URI:   https://docs.duitku.com/#woocommerce-duitku
 Description:  Duitku Payment Gateway 
-Version:      2.10
+Version:      2.11
 Author:       Duitku Development Team
 Contributors: anggiyawan@duitku.com, hanithiojuwono, rayhanduitku
 Author URI:   http://duitku.com
 Tags:         paymentgateway, duitku, BCA, Mandiri, BRI, CIMB, BNI
 Requires at least: 4.7
-Tested up to: 5.6
-Stable tag: 2.10
+Tested up to: 5.9
+Stable tag: 2.11
 Requires PHP: 7.0
 Author URI:   http://duitku.com
 License:      GPLv2 or Later
@@ -28,27 +28,28 @@ Supported Payment Channels :
 2.	Credit Card Facilitator installment and full-payment (Visa, Master, JCB, AMEX)
 3.	BCA KlikPay
 4.	BCA Virtual Account
-5.	Mandiri Virtual Account (Deprecated)
-6.	Mandiri Virtual Account
-7.	Permata Bank Virtual Account
-8.	ATM Bersama
-9.	CIMB Niaga Virtual Account
-10.	BNI Virtual Account
-11.	Maybank Virtual Account
-12.	Retail (Alfamart,  Pegadaian and Pos Indonesia)
-13.	OVO
-14.	Indodana Paylater
-15.	Shopee Pay
-16.	Shopee Pay Apps
-17.	Bank Artha Graha
-18.	Bank Sahabat Sampoerna
-19.	LinkAja Apps (Percentage Fee)
-20.	LinkAja Apps (Fixed Fee)
-21.	DANA
-22.	LinkAja QRIS
-23.	Indomaret
-24.	PosPay
+5.	Mandiri Virtual Account
+6.	Permata Bank Virtual Account
+7.	ATM Bersama
+8.	CIMB Niaga Virtual Account
+9.	BNI Virtual Account
+10.	Maybank Virtual Account
+11.	Retail (Alfamart,  Pegadaian and Pos Indonesia)
+12.	OVO
+13.	Indodana Paylater
+14.	Shopee Pay
+15.	Shopee Pay Apps
+16.	Bank Artha Graha
+17.	Bank Sahabat Sampoerna
+18.	LinkAja Apps (Percentage Fee)
+19.	LinkAja Apps (Fixed Fee)
+20.	DANA
+21.	LinkAja QRIS
+22.	Indomaret
+23.	PosPay
 24.	BNC
+25.	BRIVA
+26.	QRIS by Nobu
 
 == Installation ==
 
@@ -99,6 +100,10 @@ Integrating online payments with Duitku is very easy, web integration using our 
 4. Duitku Global Configuration Settings
 
 == Changelog ==
+
+= 2.11 Mar 17, 2022 =
+-Add BRIVA
+-Add QRIS by Nobu
 
 = 2.10 Mar 03, 2022 =
 -Add Bank Neo Commerce

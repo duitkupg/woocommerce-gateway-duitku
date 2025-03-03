@@ -2,9 +2,10 @@
 
 /*
 Plugin Name: Duitku Payment Gateway
-Description: Duitku Payment Gateway Version: 2.10
+Description: Duitku Payment Gateway Version: 2.11
+Author: Duitku
 Author: https://www.duitku.com/
-Version: 2.10
+Version: 2.11
 URI: http://www.duitku.com
 
 improvement 1.3 to 1.4:
@@ -165,6 +166,8 @@ function woocommerce_duitku_init() {
 			 */
 			function process_payment($order_id) {
 				$order = new WC_Order($order_id);
+				$this->log("Cek tanggal" . $order->order_date);
+
 
 				//Total Amount Exclude Fee
 				$totalAmount = intval($order->order_total); //Exclude
@@ -303,6 +306,17 @@ function woocommerce_duitku_init() {
 				if (self::$sanitized) {
 				  WC_Gateway_Duitku_Sanitized::duitkuRequest($params);
 				}
+				//check cache payment url
+				// session_start();
+				// if(isset($_SESSION[$params['merchantOrderId']])){
+				// 	$paymentMethod = $_SESSION[$params['merchantOrderId']]['paymentMethod'];
+				// }
+				// if($paymentMethod == $payment_method){
+				// 	$paymentUrl = $_SESSION[$params['merchantOrderId']]['paymentUrl'];
+				// 	return array(
+				// 		'result' => 'success', 'redirect' => $paymentUrl,
+				// 	);
+				// }
 
 				// show request for inquiry
 				$this->log("create a request for inquiry");
@@ -346,6 +360,11 @@ function woocommerce_duitku_init() {
 					  $order->update_meta_data('_duitku_pg_reference',$resp->reference);
 					  $order->save();
 
+					// save payment url to cache
+					// session_start();
+					// $_SESSION[$params['merchantOrderId']] = array("paymentUrl" => $resp->paymentUrl, "paymentMethod" => $payment_method);
+					// $this->log("Cek masuk cache " . $_SESSION[$params['merchantOrderId']]);
+
 					// Redirect to thank you page
 					return array(
 						'result' => 'success', 'redirect' => $resp->paymentUrl,
@@ -374,13 +393,13 @@ function woocommerce_duitku_init() {
 			 */
 			function check_duitku_response() {
 
-			$params = [];
-			$params['resultCode'] = isset($_REQUEST['resultCode'])? sanitize_text_field($_REQUEST['resultCode']): null;
-			$params['merchantOrderId'] = isset($_REQUEST['merchantOrderId'])? sanitize_text_field($_REQUEST['merchantOrderId']): null;
-			$params['reference'] = isset($_REQUEST['reference'])? sanitize_text_field($_REQUEST['reference']): null;
-			$params['status'] = isset($_REQUEST['status'])? sanitize_text_field($_REQUEST['status']): null;
+				$params = [];
+				$params['resultCode'] = isset($_REQUEST['resultCode'])? sanitize_text_field($_REQUEST['resultCode']): null;
+				$params['merchantOrderId'] = isset($_REQUEST['merchantOrderId'])? sanitize_text_field($_REQUEST['merchantOrderId']): null;
+				$params['reference'] = isset($_REQUEST['reference'])? sanitize_text_field($_REQUEST['reference']): null;
+				$params['status'] = isset($_REQUEST['status'])? sanitize_text_field($_REQUEST['status']): null;
 
-			$params['merchantOrderId'] = str_replace($this->prefix,'',$params['merchantOrderId']);
+				$params['merchantOrderId'] = str_replace($this->prefix,'',$params['merchantOrderId']);
 				if (empty($params['resultCode']) || empty($params['merchantOrderId']) || empty($params['reference'])) {
 					throw new Exception(__('wrong query string please contact admin.',
 						'duitku'));
@@ -546,7 +565,9 @@ function woocommerce_duitku_init() {
 		$methods[] = 'WC_Gateway_Duitku_LINKAJA_QRIS';
 		$methods[] = 'WC_Gateway_Duitku_INDOMARET';
 		$methods[] = 'WC_Gateway_Duitku_POS';
+		$methods[] = 'WC_Gateway_Duitku_BRIVA';
 		$methods[] = 'WC_Gateway_Duitku_BNC';
+		$methods[] = 'WC_Gateway_Duitku_NOBU_Qris';
 		return $methods;
 	}
 

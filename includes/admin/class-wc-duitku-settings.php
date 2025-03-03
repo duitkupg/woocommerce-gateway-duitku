@@ -123,6 +123,9 @@ class Duitku_Settings {
 				WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('LA') );
 			}
 		}else
+		if ( $chosen_gateway == 'duitku_nobu_qris' ) {
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('NQ') );
+		}else
 		if ( $chosen_gateway == 'duitku_va_bca' ) {
 			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('BC') );
 		}else
@@ -137,6 +140,9 @@ class Duitku_Settings {
 		}else
 		if ( $chosen_gateway == 'duitku_pospay' ) {
 			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('A2') );
+		}else
+		if ( $chosen_gateway == 'duitku_briva' ) {
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('BR') );
 		}else
 		if ( $chosen_gateway == 'duitku_bnc' ) {
 			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('NC') );
@@ -279,7 +285,7 @@ class Duitku_Settings {
 				'title' => 'Duitku ' . esc_html('Global Configuration', 'wc-duitku'),
 				'id' => self::$option_prefix . '_global_settings',
 				'desc' => __('Selamat datang di pengaturan global duitku. Untuk dapat menggunakan duitku payment channel, mohon mengisi form di bawah ini.
-<br \>  untuk mendapatkan api dan merchant code mohon kontak  <a href="mailto:admin@duitku.com">admin@duitku.com</a>', 'wc-duitku'),
+					<br \>  untuk mendapatkan api dan merchant code mohon kontak  <a href="mailto:admin@duitku.com">admin@duitku.com</a>', 'wc-duitku'),
 				'type' => 'title',
 				'default' => '',
 			),
@@ -313,6 +319,7 @@ class Duitku_Settings {
 				'type' => 'text',
 				'css' => 'width:25em;',
 				'default' => '',
+				'maxlength' => 2,
 			),
 			array(
 				'title' => esc_html('Credential Code', 'wc_duitku'),
@@ -324,7 +331,7 @@ class Duitku_Settings {
 			array(
 				'title' => esc_html('Duitku Debug', 'wc_duitku'),
 				'desc' => '<br />' . sprintf(__('Duitku Log dapat digunakan untuk melihat event, seperti notifikasi pembayaran.
-                 <code>%s</code> ', 'woothemes'), wc_get_log_file_path('duitku')),
+                	<code>%s</code> ', 'woothemes'), wc_get_log_file_path('duitku')),
 				'id' => self::$option_prefix . '_debug',
 				'type' => 'checkbox',
 				'default' => 'no',
