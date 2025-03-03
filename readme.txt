@@ -1,16 +1,16 @@
-=== woocommerce gateway duitku ===
+=== Duitku Payment Gateway ===
 /*
 PPlugin Name:  Duitku Payment Gateway
 Plugin URI:   https://docs.duitku.com/#woocommerce-duitku
 Description:  Duitku Payment Gateway 
-Version:      2.6
+Version:      2.7
 Author:       Duitku Development Team
 Contributors: anggiyawan@duitku.com, hanithiojuwono
 Author URI:   http://duitku.com
 Tags:         paymentgateway, duitku, BCA, Mandiri, BRI, CIMB, BNI
 Requires at least: 4.7
 Tested up to: 5.6
-Stable tag: 4.3
+Stable tag: 2.6
 Requires PHP: 7.0
 Author URI:   http://duitku.com
 License:      GPLv2 or Later
@@ -45,29 +45,7 @@ Supported Payment Channels :
 19.	LinkAja Apps (Percentage Fee)
 20.	LinkAja Apps (Fixed Fee)
 21.	DANA
-
-Supported Payment Channels :
-
-1.	Credit Card (Visa / Master)
-2.	BCA KlikPay
-3.	BCA Virtual Account
-4.	Mandiri Virtual Account (Deprecated)
-5.	Mandiri Virtual Account
-6.	Permata Bank Virtual Account
-7.	ATM Bersama
-8.	CIMB Niaga Virtual Account
-9.	BNI Virtual Account
-10.	Maybank Virtual Account
-11.	Ritel
-12.	OVO
-13.	Indodana Paylater
-14.	Shopee Pay
-15.	Shopee Pay Apps
-16.	Bank Artha Graha
-18.	Bank Sahabat Sampoerna
-19.	LinkAja Apps (Percentage Fee)
-20.	LinkAja Apps (Fixed Fee)
-21.	DANA
+22. LinkAja QRIS
 
 == Installation ==
 
@@ -118,6 +96,9 @@ Integrating online payments with Duitku is very easy, web integration using our 
 4. Duitku Global Configuration Settings
 
 == Changelog ==
+
+= 2.6 Jun 6, 2021 =
+-Add LinkAja QR
 
 = 2.6 Mar 4, 2021 =
 - Add LinkAja

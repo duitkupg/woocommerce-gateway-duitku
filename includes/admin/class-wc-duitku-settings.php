@@ -27,7 +27,6 @@ class Duitku_Settings {
 	public static $tab_name = 'duitku_settings';
 	public static $option_prefix = 'duitku';
 	public static function init() {
-		$request = $_REQUEST;
 		add_filter('woocommerce_settings_tabs_array', array(__CLASS__, 'add_duitku_settings_tab'), 50);
 		add_action('woocommerce_settings_tabs_duitku_settings', array(__CLASS__, 'duitku_settings_page'));
 		add_action('woocommerce_update_options_duitku_settings', array(__CLASS__, 'update_duitku_settings'));
@@ -271,7 +270,7 @@ class Duitku_Settings {
 		//$logpath = ((WOOCOMMERCE_VERSION > '2.2.0' ) ? wc_get_log_file_path( 'duitkupayments' ) : "woocommerce/logs/novalnetpayments-".sanitize_file_name( wp_hash( 'novalnetpayments' )));
 		$settings = apply_filters('woocommerce_' . self::$tab_name, array(
 			array(
-				'title' => 'Duitku ' . __('Global Configuration', 'wc-duitku'),
+				'title' => 'Duitku ' . esc_html('Global Configuration', 'wc-duitku'),
 				'id' => self::$option_prefix . '_global_settings',
 				'desc' => __('Selamat datang di pengaturan global duitku. Untuk dapat menggunakan duitku payment channel, mohon mengisi form di bawah ini.
 <br \>  untuk mendapatkan api dan merchant code mohon kontak  <a href="mailto:admin@duitku.com">admin@duitku.com</a>', 'wc-duitku'),
@@ -279,14 +278,14 @@ class Duitku_Settings {
 				'default' => '',
 			),
 			array(
-				'title' => __('Merchant Code', 'wc_duitku'),
-				'desc' => '<br />' . __('masukkan kode merchant anda.', 'wc-duitku'),
+				'title' => esc_html('Merchant Code', 'wc_duitku'),
+				'desc' => '<br />' . esc_html('masukkan kode merchant anda.', 'wc-duitku'),
 				'id' => self::$option_prefix . '_merchant_code',
 				'type' => 'text',
 				'default' => '',
 			),
 			array(
-				'title' => __('API Key', 'wc_duitku'),
+				'title' => esc_html('API Key', 'wc_duitku'),
 				'desc' => '<br />' . __(' Dapatkan API Key <a href=https://duitku.com>disini</a></small>.', 'wc-duitku'),
 				'id' => self::$option_prefix . '_api_key',
 				'type' => 'text',
@@ -294,7 +293,7 @@ class Duitku_Settings {
 				'default' => '',
 			),
 			array(
-				'title' => __('Duitku Endpoint', 'wc_duitku'),
+				'title' => esc_html('Duitku Endpoint', 'wc_duitku'),
 				'desc' => '<br />' . __('Duitku endpoint API. Mohon isi merchant code dan api key sebelum mengakses endpoint.', 'wc-duitku'),
 				'id' => self::$option_prefix . '_endpoint',
 				'type' => 'text',
@@ -302,14 +301,22 @@ class Duitku_Settings {
 				'default' => '',
 			),
 			array(
-				'title' => __('Credential Code', 'wc_duitku'),
-				'desc' => '<br />' . __('Masukkan kode kredensial anda. Kode ini hanya digunakan untuk payment method Credit Card MIGS.', 'wc-duitku'),
+				'title' => esc_html('Duitku Prefix', 'wc_duitku'),
+				'desc' => '<br />' . __('Prefix order id. Dapat digunakan untuk custom order id', 'wc-duitku'),
+				'id' => self::$option_prefix . '_prefix',
+				'type' => 'text',
+				'css' => 'width:25em;',
+				'default' => '',
+			),
+			array(
+				'title' => esc_html('Credential Code', 'wc_duitku'),
+				'desc' => '<br />' . esc_html('Masukkan kode kredensial anda. Kode ini hanya digunakan untuk payment method Credit Card MIGS.', 'wc-duitku'),
 				'id' => self::$option_prefix . '_credential_code',
 				'type' => 'text',
 				'default' => '',
 			),
 			array(
-				'title' => __('Duitku Debug', 'wc_duitku'),
+				'title' => esc_html('Duitku Debug', 'wc_duitku'),
 				'desc' => '<br />' . sprintf(__('Duitku Log dapat digunakan untuk melihat event, seperti notifikasi pembayaran.
                  <code>%s</code> ', 'woothemes'), wc_get_log_file_path('duitku')),
 				'id' => self::$option_prefix . '_debug',

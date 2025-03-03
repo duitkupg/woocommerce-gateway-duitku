@@ -11,36 +11,40 @@ var la = document.getElementsByClassName("wc_payment_method payment_method_duitk
 var scriptUrl = document.currentScript.src;
 var saIconUrl = scriptUrl.replace("js/duitku_dom_manipulate.js", "shopee_applink.png");
 var laIconUrl = scriptUrl.replace("js/duitku_dom_manipulate.js", "linkaja_applink.png");
+var timer;
 
 function checkDevice() {
-  if (!isMobile) {
-    setTimeout(function(){
-      if (sp.length > 0) {
-        if (sp[0].offsetWidth < 400){
-          sp[0].children[1].style.cssText = "display:flex;"
-        }else{
-          sp[0].children[1].style.cssText = "display:block;"
-        }
-        sp[0].children[0].value = "_";
-        sp[0].children[1].innerHTML = "ShopeePay Applink tidak tersedia<img src='"+saIconUrl+"' alt='Pembayaran Duitku'>";
+    if (!isMobile) {
+        timer = setTimeout(function () {
+            if (sp.length > 0) {
+                if (sp[0].offsetWidth < 400) {
+                    sp[0].children[1].style.cssText = "display:flex;"
+                } else {
+                    sp[0].children[1].style.cssText = "display:block;"
+                }
+                sp[0].children[0].value = "_";
+                sp[0].children[1].innerHTML = "ShopeePay Applink tidak tersedia<img src='"+saIconUrl+"' alt='Pembayaran Duitku'>";
 
-        sp[0].children[2].innerHTML = "<p>Mohon maaf sistem pembayaran ShopeePay Applink hanya tersedia untuk perangkat mobile</p>";
-      }
+                sp[0].children[2].innerHTML = "<p>Mohon maaf sistem pembayaran ShopeePay Applink hanya tersedia untuk perangkat mobile</p>";
+              
+            }
+            if (la.length > 0) {
+                if (la[0].offsetWidth < 400) {
+                    la[0].children[1].style.cssText = "display:flex;"
+                } else {
+                    la[0].children[1].style.cssText = "display:block;"
+                }
+                la[0].children[0].value = "_";
+                la[0].children[1].innerHTML = "LinkAja Applink tidak tersedia<img src='"+laIconUrl+"' alt='Pembayaran Duitku'>";
 
-      if (la.length > 0) {
-        if (la[0].offsetWidth < 400){
-          la[0].children[1].style.cssText = "display:flex;"
-        }else{
-          la[0].children[1].style.cssText = "display:block;"
-        }
-        la[0].children[0].value = "_";
-        la[0].children[1].innerHTML = "LinkAja Applink tidak tersedia<img src='"+laIconUrl+"' alt='Pembayaran Duitku'>";
+                la[0].children[2].innerHTML = "<p>Mohon maaf sistem pembayaran LinkAja Applink hanya tersedia untuk perangkat mobile</p>";
+            }
+        }, 2000);
 
-        la[0].children[2].innerHTML = "<p>Mohon maaf sistem pembayaran LinkAja Applink hanya tersedia untuk perangkat mobile</p>";
-      }
-    }, 2000);
-  }
+        setTimeout(function(){clearTimeout(timer);},10000);
+    }
 }
+
 
 window.addEventListener('load', function () {
   checkDevice();

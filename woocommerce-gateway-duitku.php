@@ -3,7 +3,7 @@
 /*
 Plugin Name: Duitku Payment Gateway
 Description: Duitku Payment Gateway Version: 2.6
-Author: Duitku Development Team
+Author: https://www.duitku.com/
 Version: 2.6
 URI: http://www.duitku.com
 
@@ -48,6 +48,10 @@ improvement 2.5 to 2.6
 - add DANA Payment.
 - add LinkAja Payment.
 - add Sanitized & Validation Email and Phone Number feature
+
+improvement 2.6 to 2.7
+- add LinkAja QRIS.
+
  */
 
 if (!defined('ABSPATH')) {
@@ -120,6 +124,7 @@ function woocommerce_duitku_init() {
 				// set  variables from global configuration
 				$this->apikey = get_option('duitku_api_key');
 				$this->merchantCode = get_option('duitku_merchant_code');
+				$this->prefix = get_option('duitku_prefix');
 				$this->expiryPeriod = (isset($this->settings['duitku_expiry_period'])) ? $this->settings['duitku_expiry_period'] : 1440;
 				$this->credCode = get_option('duitku_credential_code');
 				self::$log_enabled = get_option('duitku_debug');
@@ -243,7 +248,8 @@ function woocommerce_duitku_init() {
 				);
 
 				//generate Signature
-				$signature = md5($this->merchantCode . $order_id . $totalAmount . $this->apikey);
+	
+				$signature = md5($this->merchantCode . $this->prefix . $order_id . $totalAmount . $this->apikey);
 				
 				if ( isset($this->tipe) ) {
 					$payment_method = $this->tipe;
@@ -256,7 +262,7 @@ function woocommerce_duitku_init() {
 					'merchantCode' => $this->merchantCode, // API Key Merchant /
 					'paymentAmount' => $totalAmount,
 					'paymentMethod' => $payment_method,
-					'merchantOrderId' => $order_id,
+					'merchantOrderId' => $this->prefix . $order_id,
 					'productDetails' => get_bloginfo() . ' Order : #' . $order_id,
 					'additionalParam' => '',
 					'merchantUserInfo' => $current_user,
@@ -363,6 +369,7 @@ function woocommerce_duitku_init() {
 			$params['reference'] = isset($_REQUEST['reference'])? sanitize_text_field($_REQUEST['reference']): null;
 			$params['status'] = isset($_REQUEST['status'])? sanitize_text_field($_REQUEST['status']): null;
 
+			$params['merchantOrderId'] = str_replace($this->prefix,'',$params['merchantOrderId']);
 				if (empty($params['resultCode']) || empty($params['merchantOrderId']) || empty($params['reference'])) {
 					throw new Exception(__('wrong query string please contact admin.',
 						'duitku'));
@@ -383,11 +390,12 @@ function woocommerce_duitku_init() {
 
 				$order = new WC_Order($order_id);
 
-				if ($status == '00' && $this->validate_transaction($order_id, $reference)) {
+				if ($status == '00' && $this->validate_transaction($this->prefix . $order_id, $reference)) {
 					$order->payment_complete();
-					$order->add_order_note(__('Pembayaran telah dilakukan melalui duitku dengan id ' . $order_id . ' Dan No Reference ' . $reference, 'woocommerce'));
+					$order->add_order_note(__('Pembayaran telah dilakukan melalui duitku dengan id ' . $this->prefix . $order_id . ' Dan No Reference ' . $reference, 'woocommerce'));
 					$this->log("Pembayaran dengan order ID " . $order_id . " telah berhasil.");
 				}else {
+					$order->update_status('failed');
 					$order->add_order_note('Pembayaran dengan duitku tidak berhasil');
 					$this->log("Pembayaran dengan order ID " . $order_id . " gagal.");					
 				}
@@ -406,13 +414,14 @@ function woocommerce_duitku_init() {
 				}	
 
 				$order_id = wc_clean(stripslashes($params['merchantOrderId']));
+				$order_id = str_replace($this->prefix,'',$order_id);
 				$order = new WC_Order($order_id);
 											
 				if ($params['resultCode'] == '00') {
 						WC()->cart->empty_cart();
 					 	wc_add_notice('pembayaran dengan duitku telah berhasil.');
             			return wp_redirect($order->get_checkout_order_received_url());
-				}else if ($sanitize['resultCode'] == '01') {
+				}else if ($params['resultCode'] == '01') {
 						WC()->cart->empty_cart();														
 						wc_add_notice('pembayaran dengan duitku sedang diproses.');
 						return wp_redirect($order->get_view_order_url());
@@ -420,6 +429,8 @@ function woocommerce_duitku_init() {
 						WC()->cart->empty_cart();
 						wc_add_notice('pembayaran dengan duitku gagal.', 'error');
             			return wp_redirect($order->get_cancel_order_url());
+            			throw new Exception(_('Pembayaran Gagal.', 'duitku'));
+            			
 				}
 			}
 
@@ -522,6 +533,7 @@ function woocommerce_duitku_init() {
 		$methods[] = 'WC_Gateway_Duitku_DANA';
 		$methods[] = 'WC_Gateway_Duitku_VA_ARTHA';
 		$methods[] = 'WC_Gateway_Duitku_VA_SAMPOERNA';
+		$methods[] = 'WC_Gateway_Duitku_LINKAJA_QRIS';
 		return $methods;
 	}
 
