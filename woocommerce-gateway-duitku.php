@@ -2,10 +2,10 @@
 
 /*
 Plugin Name: Duitku Payment Gateway
-Description: Duitku Payment Gateway Version: 2.11.4
+Description: Duitku Payment Gateway Version: 2.11.5
 Author: Duitku
 Author URI: https://www.duitku.com/
-Version: 2.11.4
+Version: 2.11.5
 URI: http://www.duitku.com
 
 improvement 1.3 to 1.4:
@@ -79,6 +79,8 @@ improvement 2.11.2 to 2.11.3
 removing feature 2.11.3 to 2.11.4
 - Remove Sampoerna VA 
 
+improvement 2.11.4 to 2.11.5
+- Add new payment Gudang Voucher QRIS
  */
 
 if (!defined('ABSPATH')) {
@@ -583,6 +585,7 @@ function woocommerce_duitku_init() {
 		$methods[] = 'WC_Gateway_Duitku_BNC';
 		$methods[] = 'WC_Gateway_Duitku_NOBU_Qris';
 		$methods[] = 'WC_Gateway_Duitku_ATOME';
+		$methods[] = 'WC_Gateway_Duitku_GUDANG_VOUCHER_QRIS';
 		return $methods;
 	}
 

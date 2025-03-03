@@ -148,7 +148,10 @@ class Duitku_Settings {
 			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('NC') );
 		}else
 		if ( $chosen_gateway == 'duitku_atome' ) {
-			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('NC') );
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('AT') );
+		}
+		if ( $chosen_gateway == 'duitku_gudang_voucher_qris' ) {
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('GQ') );
 		}
 	}
 
