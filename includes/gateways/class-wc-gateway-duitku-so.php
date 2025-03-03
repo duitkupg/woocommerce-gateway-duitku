@@ -5,9 +5,9 @@
  }
 
 /**
- * Duitku Weepay
+ * Duitku Credit Card
  *
- * This gateway is used for processing Weepay online payment
+ * This gateway is used for processing online payment using Duitku Credit Card
  *
  * Copyright (c) Duitku
  *
@@ -15,21 +15,21 @@
  * you have found this script useful a small recommendation as well as a
  * comment on merchant form would be greatly appreciated.
  *
- * @class       WC_Gateway_Duitku_weepay
+ * @class       WC_Gateway_Duitku_CC_SO
  * @extends     Duitku_Payment_Gateway
  * @package     Duitku/Classes/Payment
  * @author      Duitku
  * @located at  /includes/gateways
  */
 
- class WC_Gateway_Duitku_Weepay extends Duitku_Payment_Gateway {
-    var $sub_id = 'duitku_weepay';
+ class WC_Gateway_Duitku_CC_SO extends Duitku_Payment_Gateway {
+    var $sub_id = 'duitku_credit_card_so';
         public function __construct() {
 	    parent::__construct();
-            $this->method_title = 'Duitku Weepay';
-	    $this->payment_method = 'V2';
+            $this->method_title = 'Duitku Credit Card Fasilitator';
+	    $this->payment_method = 'SO';
 	    //payment gateway logo
-	    $this->icon = plugins_url('/assets/weepay.png', dirname(__FILE__) );
+	    $this->icon = plugins_url('/assets/credit-card.png', dirname(__FILE__) );
 	}
  }
  //$obj = new WC_Gateway_Duitku_Mandiri;

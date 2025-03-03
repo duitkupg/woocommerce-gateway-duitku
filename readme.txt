@@ -3,7 +3,7 @@
 Plugin Name:  Duitku Payment Gateway
 Plugin URI:   https://developer.wordpress.org/plugins/the-basics/
 Description:  Duitku Payment Gateway 
-Version:      1.6
+Version:      1.7
 Author:       Duitku Development Team Author
 
 Author URI:   http://duitku.com
@@ -18,6 +18,12 @@ Install & activate the plugin. Modify some options in the settings page to suits
 
 -
 == Changelog ==
+
+= 1.7 Nov 01, 2019) = 
+
+improvement 1.6 to 1.7:
+- add Credit Card Fasilitator.
+- add fitur fee
 
 = 1.6 Mei 15, 2019) = 
 
