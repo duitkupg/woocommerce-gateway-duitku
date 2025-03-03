@@ -5,9 +5,9 @@
  }
 
 /**
- * Duitku Credit Card Via MIGS BCA
+ * Duitku DANA
  *
- * This gateway is used for processing online payment using MIGS BCA Credit Card
+ * This gateway is used for processing online payment using DANA.
  *
  * Copyright (c) Duitku
  *
@@ -15,21 +15,21 @@
  * you have found this script useful a small recommendation as well as a
  * comment on merchant form would be greatly appreciated.
  *
- * @class       WC_Gateway_Duitku_CC_MIGS
+ * @class       WC_Gateway_Duitku_DANA
  * @extends     Duitku_Payment_Gateway
  * @package     Duitku/Classes/Payment
  * @author      Duitku
  * @located at  /includes/gateways
  */
 
- class WC_Gateway_Duitku_CC_MIGS extends Duitku_Payment_Gateway {
-    var $sub_id = 'duitku_credit_card_migs';
+ class WC_Gateway_Duitku_DANA extends Duitku_Payment_Gateway {
+    var $sub_id = 'duitku_dana';
         public function __construct() {
 	    parent::__construct();
-            $this->method_title = 'Duitku Credit Card MIGS';
-	    $this->payment_method = 'MG';
+            $this->method_title = 'Duitku DANA';
+	    $this->payment_method = 'DA';
 	    //payment gateway logo
-	    $this->icon = plugins_url('/assets/migs.png', dirname(__FILE__) );
+	    $this->icon = plugins_url('/assets/dana.png', dirname(__FILE__) );
 		
 		//Load settings
 		$this->init_form_fields();
@@ -65,6 +65,6 @@
 	}
 	
  }
- //$obj = new WC_Gateway_Duitku_Mandiri;
+ //$obj = new WC_Gateway_Duitku_DANA;
 
 ?>

@@ -29,7 +29,7 @@
             $this->method_title = 'Duitku Credit Card';
 	    $this->payment_method = 'VC';
 	    //payment gateway logo
-	    $this->icon = plugins_url('/assets/credit-card.png', dirname(__FILE__) );
+	    $this->icon = plugins_url('/assets/cc.png', dirname(__FILE__) );
 		
 		//Load settings
 		$this->init_form_fields();

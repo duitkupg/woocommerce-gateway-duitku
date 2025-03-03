@@ -2,9 +2,9 @@
 
 /*
 Plugin Name: Duitku Payment Gateway
-Description: Duitku Payment Gateway Version: 2.5
+Description: Duitku Payment Gateway Version: 2.6
 Author: Duitku Development Team
-Version: 2.5
+Version: 2.6
 URI: http://www.duitku.com
 
 improvement 1.3 to 1.4:
@@ -43,6 +43,11 @@ improvement 2.4 to 2.5
 - Remove Credit Card SO
 - Add Mandiri Direct Virtual Account
 - Add Credit Card Facilitator
+
+improvement 2.5 to 2.6
+- add DANA Payment.
+- add LinkAja Payment.
+- add Sanitized & Validation Email and Phone Number feature
  */
 
 if (!defined('ABSPATH')) {
@@ -51,10 +56,11 @@ if (!defined('ABSPATH')) {
 
 add_action('plugins_loaded', 'woocommerce_duitku_init', 0);
 
-add_action('wp_enqueue_scripts','dom_manipulate_init');
+add_action('wp_enqueue_scripts','duitku_dom_manipulate_init');
 
-function dom_manipulate_init() {
-	wp_enqueue_script( 'dom-manipulate-js', plugins_url('/includes/assets/js/dom_manipulate_.js', __FILE__ ));
+//function to check if the customer open from mobile or desktop
+function duitku_dom_manipulate_init() {
+	wp_enqueue_script( 'duitku-dom-manipulate-js', plugins_url('/includes/assets/js/duitku_dom_manipulate.js', __FILE__ ));
 }
 
 function woocommerce_duitku_init() {
@@ -65,6 +71,8 @@ function woocommerce_duitku_init() {
 	//include global configuration file
 
 	include_once dirname(__FILE__) . '/includes/admin/class-wc-duitku-settings.php';
+	include_once dirname(__FILE__) . '/includes/duitku/wc-gateway-duitku-sanitized.php';
+	include_once dirname(__FILE__) . '/includes/duitku/wc-gateway-duitku-validation.php';
 	if (!class_exists('Duitku_Payment_Gateway')) {
 
 		/**
@@ -79,12 +87,17 @@ function woocommerce_duitku_init() {
 			/** @var WC_Logger Logger instance */
 			public static $log = false;
 
+			/** you can control it with Sanitized (default: true) */
+			public static $sanitized = true;
+			public static $validation = true;
+
+
 			public function __construct() {
 
 				//plugin id
 				$this->id = $this->sub_id;
 
-				//payment method will be set in each child class (e.g. Duitku Wallet = WW or Mandiri = MY)
+				//payment method will be set in each child class (e.g. Duitku Wallet = WW or Mandiri = M2)
 				$this->payment_method = '';
 
 				//true only in case of direct payment method, false in our case
@@ -101,7 +114,8 @@ function woocommerce_duitku_init() {
 				// Define user set variables
 				$this->title = (isset($this->settings['title'])) ? $this->settings['title'] : "Pembayaran Duitku";
 				$this->enabled = (isset($this->settings['enabled'])) ? $this->settings['enabled'] : false;
-				$this->description = (isset($this->settings['description'])) ? $this->settings['description'] : "";				
+				$this->description = (isset($this->settings['description'])) ? $this->settings['description'] : "";
+				$this->tipe = (isset($this->settings['tipe'])) ? $this->settings['tipe'] : null;
 
 				// set  variables from global configuration
 				$this->apikey = get_option('duitku_api_key');
@@ -145,25 +159,14 @@ function woocommerce_duitku_init() {
 				$url = $this->endpoint . '/api/merchant/v2/inquiry';
 
 				//merchant user info taken from billing name
-				$current_user = $order->billing_first_name . " " . $order->billing_last_name;
-
-				// foreach ($order->get_items() as $item_key => $item ) {
-				  // $description    = $item->get_name();
-				// }
-
-				// $ProducItem = array(
-					// 'name'		=> substr($description,0, 49),
-					// 'price'		=> $totalAmount,
-					// 'quantity'	=> 1
-				// );
+				$current_user = $order->billing_first_name . " " . $order->billing_last_name;				
 
 				$item_details = [];
 
 				foreach ($order->get_items() as $item_key => $item ) {
 				  $item_name    = $item->get_name();
 				  $quantity     = $item->get_quantity();
-				  $product_price  = $item->get_subtotal();
-				  // $item_beli = $item;
+				  $product_price  = $item->get_subtotal();				  
 
 				  $item_details[] = array(
 					'name' => $item_name,
@@ -171,6 +174,7 @@ function woocommerce_duitku_init() {
 					'quantity' => $quantity
 				  );
 				}
+								
 
 				// Shipping fee as item_details
 				if( $order->get_total_shipping() > 0 ) {
@@ -240,12 +244,18 @@ function woocommerce_duitku_init() {
 
 				//generate Signature
 				$signature = md5($this->merchantCode . $order_id . $totalAmount . $this->apikey);
+				
+				if ( isset($this->tipe) ) {
+					$payment_method = $this->tipe;
+				} else {
+					$payment_method = $this->payment_method;
+				}
 
 				// Prepare Parameters
 				$params = array(
 					'merchantCode' => $this->merchantCode, // API Key Merchant /
 					'paymentAmount' => $totalAmount,
-					'paymentMethod' => $this->payment_method,
+					'paymentMethod' => $payment_method,
 					'merchantOrderId' => $order_id,
 					'productDetails' => get_bloginfo() . ' Order : #' . $order_id,
 					'additionalParam' => '',
@@ -255,11 +265,12 @@ function woocommerce_duitku_init() {
 					'phoneNumber' => $order->billing_phone,
 					'signature' => $signature,
 					'expiryPeriod' => $this->expiryPeriod,
-					'returnUrl' => $this->redirect_url . '?status=notify',
-					'callbackUrl' => $this->redirect_url,
+					'returnUrl' => esc_url_raw($this->redirect_url) . '?status=notify',
+					'callbackUrl' => esc_url_raw($this->redirect_url),
 					'customerDetail' => $customerDetails,
 					'itemDetails' => $item_details
 				);
+				
 				if ($this->payment_method == "MG") {
 					$url = $this->endpoint . '/api/merchant/creditcard/inquiry';
 					$params['credCode'] = $this->credCode;
@@ -267,11 +278,20 @@ function woocommerce_duitku_init() {
 
 				$headers = array('Content-Type' => 'application/json');
 
+				if (self::$validation) {
+				  WC_Gateway_Duitku_Validation::duitkuRequest($params);
+				  
+				}
+				
+				if (self::$sanitized) {
+				  WC_Gateway_Duitku_Sanitized::duitkuRequest($params);
+				}
+
 				// show request for inquiry
 				$this->log("create a request for inquiry");
 				$this->log(json_encode($params, true));
 
-				// Send this payload to Authorize.net for processing
+				// Send this payload to Duitku.com for processing
 				$response = wp_remote_post($url, array(
 					'method' => 'POST', 'body' => json_encode($params), 'timeout' => 90, 'sslverify' => false, 'headers' => $headers,
 				));
@@ -298,17 +318,12 @@ function woocommerce_duitku_init() {
 				$this->log('response body: ' . $response_body);
 				$this->log('response code: ' . $response_code);
 				$this->log($url);
-
-				// Test the code to know if the transaction went through or not. 1 or 4
+				
 				// means the transaction was a success
 				if ($response_code == '200') {
 
 					//save reference Code from duitku
-					$this->log('Inquiry Success for order Id ' . $order->get_order_number() . ' with reference number ' . $resp->reference);
-					if($this->payment_method == 'BT' || $this->payment_method == 'SO')
-					{
-						WC()->cart->empty_cart();
-					}
+					$this->log('Inquiry Success for order Id ' . $order->get_order_number() . ' with reference number ' . $resp->reference);					
 
 					// store Url as $Order metadata
 					  $order->update_meta_data('_duitku_pg_reference',$resp->reference);
@@ -342,20 +357,29 @@ function woocommerce_duitku_init() {
 			 */
 			function check_duitku_response() {
 
-				if (empty($_REQUEST['resultCode']) || empty($_REQUEST['merchantOrderId']) || empty($_REQUEST['reference'])) {
+			$params = [];
+			$params['resultCode'] = isset($_REQUEST['resultCode'])? sanitize_text_field($_REQUEST['resultCode']): null;
+			$params['merchantOrderId'] = isset($_REQUEST['merchantOrderId'])? sanitize_text_field($_REQUEST['merchantOrderId']): null;
+			$params['reference'] = isset($_REQUEST['reference'])? sanitize_text_field($_REQUEST['reference']): null;
+			$params['status'] = isset($_REQUEST['status'])? sanitize_text_field($_REQUEST['status']): null;
+
+				if (empty($params['resultCode']) || empty($params['merchantOrderId']) || empty($params['reference'])) {
 					throw new Exception(__('wrong query string please contact admin.',
 						'duitku'));
 					return;
 				}
 
-				if (!empty($_REQUEST['status']) && $_REQUEST['status'] == 'notify') {
-					$this->notify_response();
+				//if notification only redirect to notification page
+				if (!empty($params['status']) && $params['status'] == 'notify') {
+					$this->notify_response($params);
 					exit;
 				}
+				
+				//if callback request proceed to payment
 
-				$order_id = wc_clean(stripslashes($_REQUEST['merchantOrderId']));
-				$status = wc_clean(stripslashes($_REQUEST['resultCode']));
-				$reference = wc_clean(stripslashes($_REQUEST['reference']));
+				$order_id = wc_clean(stripslashes($params['merchantOrderId']));
+				$status = wc_clean(stripslashes($params['resultCode']));
+				$reference = wc_clean(stripslashes($params['reference']));
 
 				$order = new WC_Order($order_id);
 
@@ -365,41 +389,37 @@ function woocommerce_duitku_init() {
 					$this->log("Pembayaran dengan order ID " . $order_id . " telah berhasil.");
 				}else {
 					$order->add_order_note('Pembayaran dengan duitku tidak berhasil');
-					$this->log("Pembayaran dengan order ID " . $order_id . " gagal.");
-					//$order->update_status( 'on-hold', __( 'pembayaran gagal mohon contact administrator ', 'woocommerce'));
-					//$order->reduce_order_stock();
-					//WC()->cart->empty_cart();
+					$this->log("Pembayaran dengan order ID " . $order_id . " gagal.");					
 				}
 
 				exit;
 			}
 
-			function notify_response() {
+			function notify_response($params) {				
+			
+				// log request from Duitku server
+				$this->log(var_export($params, true));
+				
+				if (empty($params['resultCode']) || empty($params['merchantOrderId'])) {
+					throw new Exception(__('wrong query string please contact admin.', 'duitku'));
+						return false;
+				}	
 
-				// log request from server
-				$this->log(var_export($_REQUEST, true));
-
-				if (empty($_REQUEST['resultCode']) || empty($_REQUEST['merchantOrderId'])) {
-					throw new Exception(__('wrong query string please contact admin.',
-						'duitku'));
-					return false;
-				}
-
-				$order_id = wc_clean(stripslashes($_REQUEST['merchantOrderId']));
+				$order_id = wc_clean(stripslashes($params['merchantOrderId']));
 				$order = new WC_Order($order_id);
-
-				if ($_REQUEST['resultCode'] == '00') {
-					wc_add_notice('pembayaran dengan duitku telah berhasil.');
-            				return wp_redirect($order->get_checkout_order_received_url());
-				}else if ($_REQUEST['resultCode'] == '01') {
-							wc_add_notice('pembayaran dengan duitku sedang diproses.');
-							WC()->cart->empty_cart();
-
-            				// return wp_redirect(wc_get_endpoint_url( 'order-received', '', wc_get_page_permalink( 'checkout' ) ));
-							wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
+											
+				if ($params['resultCode'] == '00') {
+						WC()->cart->empty_cart();
+					 	wc_add_notice('pembayaran dengan duitku telah berhasil.');
+            			return wp_redirect($order->get_checkout_order_received_url());
+				}else if ($sanitize['resultCode'] == '01') {
+						WC()->cart->empty_cart();														
+						wc_add_notice('pembayaran dengan duitku sedang diproses.');
+						return wp_redirect($order->get_view_order_url());
 				} else {
-					wc_add_notice('pembayaran dengan duitku gagal.', 'error');
-            				return wp_redirect($order->get_checkout_payment_url(false));
+						WC()->cart->empty_cart();
+						wc_add_notice('pembayaran dengan duitku gagal.', 'error');
+            			return wp_redirect($order->get_cancel_order_url());
 				}
 			}
 
@@ -412,7 +432,7 @@ function woocommerce_duitku_init() {
 				$order = new WC_Order($order_id);
 
 				//endpoint for transactionStatus
-				$url = $this->endpoint . '/api/merchant/transactionStatus';
+				$url = esc_url_raw($this->endpoint) . '/api/merchant/transactionStatus';
 
 				//generate Signature
 				$signature = md5($this->merchantCode . $order_id . $this->apikey);
@@ -445,7 +465,6 @@ function woocommerce_duitku_init() {
 				if ($response_code == '200') {
 					// Parse the response into something we can read
 					$resp = json_decode($response_body);
-
 					if ($resp->statusCode == '00') {
 						return true;
 					}
@@ -500,6 +519,9 @@ function woocommerce_duitku_init() {
 		$methods[] = 'WC_Gateway_Duitku_INDODANA';
 		$methods[] = 'WC_Gateway_Duitku_SHOPEEPAY_APPLINK';
 		$methods[] = 'WC_Gateway_Duitku_LINKAJA_APPLINK';
+		$methods[] = 'WC_Gateway_Duitku_DANA';
+		$methods[] = 'WC_Gateway_Duitku_VA_ARTHA';
+		$methods[] = 'WC_Gateway_Duitku_VA_SAMPOERNA';
 		return $methods;
 	}
 

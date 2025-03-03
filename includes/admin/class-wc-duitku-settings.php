@@ -119,13 +119,22 @@ class Duitku_Settings {
 			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('SA') );
 		}else
 		if ( $chosen_gateway == 'duitku_linkaja_applink' ) {
-			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('LA') );
+			$option_setting = (array)get_option( 'woocommerce_' . $chosen_gateway . '_settings' );
+			
+			if ( isset($option_setting['tipe']) ){
+				WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee($option_setting['tipe']) );
+			} else {
+				WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('LA') );
+			}
 		}else
 		if ( $chosen_gateway == 'duitku_va_bca' ) {
 			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('BC') );
 		}else
 		if ( $chosen_gateway == 'duitku_credit_card_migs' ) {
 			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('MG') );
+		}else
+		if ( $chosen_gateway == 'duitku_dana' ) {
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('DA') );
 		}
 	}
 

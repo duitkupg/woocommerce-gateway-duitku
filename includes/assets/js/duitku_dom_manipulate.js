@@ -9,8 +9,8 @@ var sp = document.getElementsByClassName("wc_payment_method payment_method_duitk
 var la = document.getElementsByClassName("wc_payment_method payment_method_duitku_linkaja_applink");
 
 var scriptUrl = document.currentScript.src;
-var saIconUrl = scriptUrl.replace("js/dom_manipulate_.js", "shopee_applink.png");
-var laIconUrl = scriptUrl.replace("js/dom_manipulate_.js", "linkaja_applink.png");
+var saIconUrl = scriptUrl.replace("js/duitku_dom_manipulate.js", "shopee_applink.png");
+var laIconUrl = scriptUrl.replace("js/duitku_dom_manipulate.js", "linkaja_applink.png");
 
 function checkDevice() {
   if (!isMobile) {
