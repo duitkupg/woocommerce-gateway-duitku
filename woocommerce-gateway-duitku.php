@@ -2,10 +2,10 @@
 
 /*
 Plugin Name: Duitku Payment Gateway
-Description: Duitku Payment Gateway Version: 2.11.1
+Description: Duitku Payment Gateway Version: 2.11.2
 Author: Duitku
 Author URI: https://www.duitku.com/
-Version: 2.11.1
+Version: 2.11.2
 URI: http://www.duitku.com
 
 improvement 1.3 to 1.4:
@@ -69,6 +69,9 @@ improvement 2.10 to 2.11
 
 improvement 2.11 to 2.11.1
 - Improvement for input Phone Number Parameter
+
+improvement 2.11.1 to 2.11.2
+- Change Logo Bank Neo Commerce
 
  */
 

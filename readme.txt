@@ -3,7 +3,7 @@
 PPlugin Name:  Duitku Payment Gateway
 Plugin URI:   https://docs.duitku.com/#woocommerce-duitku
 Description:  Duitku Payment Gateway 
-Version:      2.11
+Version:      2.11.2
 Author:       Duitku Development Team
 Contributors: anggiyawan@duitku.com, hanithiojuwono, rayhanduitku
 Author URI:   http://duitku.com
@@ -100,6 +100,8 @@ Integrating online payments with Duitku is very easy, web integration using our 
 4. Duitku Global Configuration Settings
 
 == Changelog ==
+= 2.11.2 Juni 16, 2022 =
+-Change Logo Bank Neo Commerce 
 
 = 2.11.1 April 20, 2022 =
 -Improvement for input parameter phoneNumber
