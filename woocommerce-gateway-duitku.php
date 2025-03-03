@@ -2,10 +2,10 @@
 
 /*
 Plugin Name: Duitku Payment Gateway
-Description: Duitku Payment Gateway Version: 2.11.2
+Description: Duitku Payment Gateway Version: 2.11.3
 Author: Duitku
 Author URI: https://www.duitku.com/
-Version: 2.11.2
+Version: 2.11.3
 URI: http://www.duitku.com
 
 improvement 1.3 to 1.4:
@@ -72,6 +72,9 @@ improvement 2.11 to 2.11.1
 
 improvement 2.11.1 to 2.11.2
 - Change Logo Bank Neo Commerce
+
+improvement 2.11.2 to 2.11.3
+- Add new Payment ATOME
 
  */
 
@@ -577,6 +580,7 @@ function woocommerce_duitku_init() {
 		$methods[] = 'WC_Gateway_Duitku_BRIVA';
 		$methods[] = 'WC_Gateway_Duitku_BNC';
 		$methods[] = 'WC_Gateway_Duitku_NOBU_Qris';
+		$methods[] = 'WC_Gateway_Duitku_ATOME';
 		return $methods;
 	}
 

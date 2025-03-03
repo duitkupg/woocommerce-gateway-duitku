@@ -146,6 +146,9 @@ class Duitku_Settings {
 		}else
 		if ( $chosen_gateway == 'duitku_bnc' ) {
 			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('NC') );
+		}else
+		if ( $chosen_gateway == 'duitku_atome' ) {
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('NC') );
 		}
 	}
 

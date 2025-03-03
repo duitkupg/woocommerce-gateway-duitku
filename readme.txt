@@ -3,13 +3,13 @@
 PPlugin Name:  Duitku Payment Gateway
 Plugin URI:   https://docs.duitku.com/#woocommerce-duitku
 Description:  Duitku Payment Gateway 
-Version:      2.11.2
+Version:      2.11.3
 Author:       Duitku Development Team
 Contributors: anggiyawan@duitku.com, hanithiojuwono, rayhanduitku
 Author URI:   http://duitku.com
-Tags:         paymentgateway, duitku, BCA, Mandiri, BRI, CIMB, BNI
+Tags:         paymentgateway, duitku, BCA, Mandiri, BRI, CIMB, BNI, Permata, ATM Bersama, CIMB Niaga, Maybank, Alfamart, Pegadaian, Pos Indonesia, OVO, Indodana, Shopee, Artha Graha, Sampoerna, LinkAja, DANA, Indomaret, PosPay, BRIVA, Nobu, ATOME
 Requires at least: 4.7
-Tested up to: 5.9
+Tested up to: 6.0.1
 Stable tag: 2.11
 Requires PHP: 7.0
 Author URI:   http://duitku.com
@@ -50,6 +50,7 @@ Supported Payment Channels :
 24.	BNC
 25.	BRIVA
 26.	QRIS by Nobu
+26.	ATOME
 
 == Installation ==
 
@@ -100,6 +101,9 @@ Integrating online payments with Duitku is very easy, web integration using our 
 4. Duitku Global Configuration Settings
 
 == Changelog ==
+= 2.11.3 Aug 31, 2022 =
+-Add new payment ATOME 
+
 = 2.11.2 Juni 16, 2022 =
 -Change Logo Bank Neo Commerce 
 
