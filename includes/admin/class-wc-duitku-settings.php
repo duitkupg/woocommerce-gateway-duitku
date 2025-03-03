@@ -150,6 +150,9 @@ class Duitku_Settings {
 		if ( $chosen_gateway == 'duitku_atome' ) {
 			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('AT') );
 		}
+		if ( $chosen_gateway == 'duitku_jenius_pay' ) {
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('JP') );
+		}
 		if ( $chosen_gateway == 'duitku_gudang_voucher_qris' ) {
 			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('GQ') );
 		}
@@ -291,7 +294,7 @@ class Duitku_Settings {
 				'title' => 'Duitku ' . esc_html('Global Configuration', 'wc-duitku'),
 				'id' => self::$option_prefix . '_global_settings',
 				'desc' => __('Selamat datang di pengaturan global duitku. Untuk dapat menggunakan duitku payment channel, mohon mengisi form di bawah ini.
-					<br \>  untuk mendapatkan api dan merchant code mohon kontak  <a href="mailto:admin@duitku.com">admin@duitku.com</a>', 'wc-duitku'),
+					<br \>  untuk mendapatkan api dan merchant code mohon kontak  <a href="mailto:support@duitku.com">support@duitku.com</a>', 'wc-duitku'),
 				'type' => 'title',
 				'default' => '',
 			),

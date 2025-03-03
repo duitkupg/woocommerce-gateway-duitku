@@ -3,7 +3,7 @@
 PPlugin Name:  Duitku Payment Gateway
 Plugin URI:   https://docs.duitku.com/#woocommerce-duitku
 Description:  Duitku Payment Gateway 
-Version:      2.11.5
+Version:      2.11.6
 Author:       Duitku Development Team
 Contributors: anggiyawan@duitku.com, hanithiojuwono, rayhanduitku
 Author URI:   http://duitku.com
@@ -50,6 +50,8 @@ Supported Payment Channels :
 24.	BRIVA
 25.	QRIS by Nobu
 26.	ATOME
+27. Gudang Voucher QRIS
+28. Jenius Pay
 
 == Installation ==
 
@@ -100,8 +102,11 @@ Integrating online payments with Duitku is very easy, web integration using our 
 4. Duitku Global Configuration Settings
 
 == Changelog ==
+= 2.11.6 February 26, 2024 =
+-Add new payment Jenius Pay 
+
 = 2.11.5 July 28, 2023 =
--Add new payment Gudang Voucher QRIS
+-Add new payment Gudang Voucher QRIS 
 
 = 2.11.4 January 05, 2022 =
 -Remove Sampoerna VA 
