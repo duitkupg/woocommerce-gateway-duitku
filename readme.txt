@@ -3,7 +3,7 @@
 Plugin Name:  Duitku Payment Gateway
 Plugin URI:   https://developer.wordpress.org/plugins/the-basics/
 Description:  Duitku Payment Gateway 
-Version:      2.1
+Version:      2.2
 Author:       Duitku Development Team
 
 Author URI:   http://duitku.com
@@ -18,6 +18,12 @@ Install & activate the plugin. Modify some options in the settings page to suits
 
 -
 == Changelog ==
+
+= 2.2 June 17, 2020 = 
+
+improvement 2.1 to 2.2:
+- Add ShopeePay Applink & LinkAja Applink
+- Add observer & mutation for detect device
 
 = 2.1 Mar 12, 2020 = 
 

@@ -2,9 +2,9 @@
 
 /*
 Plugin Name: Duitku Payment Gateway
-Description: Duitku Payment Gateway Version: 2.1
+Description: Duitku Payment Gateway Version: 2.2
 Author: Duitku Development Team
-Version: 2.1
+Version: 2.2
 URI: http://www.duitku.com
 
 improvement 1.3 to 1.4:
@@ -27,6 +27,10 @@ improvement 1.7 to 2.0:
 
 improvement 2.0 to 2.1:
 - Improve Expired Period
+
+improvement 2.1 to 2.2:
+- Add ShopeePay Applink & LinkAja Applink
+- Add observer & mutation for detect device
 
  */
 
@@ -151,7 +155,7 @@ function woocommerce_duitku_init() {
 
 				  $item_details[] = array(
 					'name' => $item_name,
-					'price' => intval($product_price),
+					'price' => round($product_price),
 					'quantity' => $quantity
 				  );
 				}
@@ -160,7 +164,7 @@ function woocommerce_duitku_init() {
 				if( $order->get_total_shipping() > 0 ) {
 				  $item_details[] = array(
 					'name' => 'Shipping Fee',
-					'price' => ceil($order->get_total_shipping()),
+					'price' => round($order->get_total_shipping()),
 					'quantity' => 1
 				  );
 				}
@@ -169,7 +173,7 @@ function woocommerce_duitku_init() {
 				if( $order->get_total_tax() > 0 ) {
 				  $item_details[] = array(
 					'name' => 'Tax',
-					'price' => ceil($order->get_total_tax()),
+					'price' => round($order->get_total_tax()),
 					'quantity' => 1
 				  );
 				}
@@ -178,7 +182,7 @@ function woocommerce_duitku_init() {
 				if ( $order->get_total_discount() > 0) {
 				  $item_details[] = array(
 					'name' => 'Total Discount',
-					'price' => ceil($order->get_total_discount())  * -1,
+					'price' => round($order->get_total_discount())  * -1,
 					'quantity' => 1
 				  );
 				}
@@ -190,13 +194,13 @@ function woocommerce_duitku_init() {
 				  foreach( $fees as $item ) {
 
 					if ( $item['name'] == __('Surcharge', 'wc-duitku') ) {
-					  $totalAmount = $totalAmount - ceil($item['line_total']);
+					  $totalAmount = $totalAmount - round($item['line_total']);
 					  continue;
 					}
 
 					$item_details[] = array(
 					  'name' => $item['name'],
-					  'price' => ceil($item['line_total']),
+					  'price' => round($item['line_total']),
 					  'quantity' => 1
 					);
 					$i++;
