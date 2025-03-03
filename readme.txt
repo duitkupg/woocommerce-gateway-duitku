@@ -1,21 +1,21 @@
 === Duitku Payment Gateway ===
-/*
-PPlugin Name:  Duitku Payment Gateway
+
+Plugin Name:  Duitku Payment Gateway
 Plugin URI:   https://docs.duitku.com/#woocommerce-duitku
-Description:  Duitku Payment Gateway 
-Version:      2.11.9
+Description:  Duitku Payment Gateway V2 API
+Version:      2.11.11
 Author:       Duitku Development Team
 Contributors: anggiyawan@duitku.com, hanithiojuwono, rayhanduitku
 Author URI:   http://duitku.com
 Tags:         paymentgateway, duitku, BCA, Mandiri, BRI, CIMB, BNI, Permata, ATM Bersama, CIMB Niaga, Maybank, Alfamart, Pegadaian, Pos Indonesia, OVO, Indodana, Shopee, Artha Graha, Sampoerna, LinkAja, DANA, Indomaret, PosPay, BRIVA, Nobu, ATOME
 Requires at least: 4.7
-Tested up to: 6.4.3
-Stable tag: 2.11
+Tested up to: 6.7.2
+Stable tag: 2.11.11
 Requires PHP: 7.3 or Higher
 Author URI:   http://duitku.com
 License:      GPLv2 or Later
 License URI:  https://www.gnu.org/licenses/gpl-2.0.html
-*/
+
 
 == Description ==
 
@@ -105,6 +105,9 @@ Integrating online payments with Duitku is very easy, web integration using our 
 4. Duitku Global Configuration Settings
 
 == Changelog ==
+
+= 2.11.10 June 10, 2024 =
+-Woocommerce Duitku Payment Gateway API V2 Support Blocks Checkout
 
 = 2.11.10 June 10, 2024 =
 -Add new payment BSI VA

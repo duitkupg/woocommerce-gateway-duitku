@@ -29,51 +29,51 @@
 		$this->method_title = 'Duitku LinkAja QRIS';
 	    $this->payment_method = 'LQ';
 	    //payment gateway logo
-	    $this->icon = plugins_url('/assets/linkaja_applink.png', dirname(__FILE__) );
+	    $this->icon = plugins_url('/assets/duitku_linkaja_qris.png', dirname(__FILE__) );
 
 		//Load settings
 		$this->init_form_fields();
 		$this->init_settings();
 	}
 
-	/**
-	 * set field for each payment gateway
-	 * @return void
-	 */
-	function init_form_fields() {
+	function init_form_fields()
+{
 
-		$this->form_fields = array(
-			'enabled' => array(
+			$this->form_fields = array(
+			  'enabled' => array(
 				'title' => __('Enable/Disable', 'wc-duitku'),
-				'label' => __('Enable Duitku', 'wc-duitku'),
-				'type' => 'checkbox', 'description' => '',
-				'default' => 'no',
-			),
-			'title' => array(
+				'type' => 'checkbox',
+				'label' => __('Enable Duitku Payment', 'wc-duitku'),
+				'default' => 'no'
+			  ),
+			  'title' => array(
 				'title' => __('Title', 'wc-duitku'),
 				'type' => 'text',
 				'description' => __('', 'wc-duitku'),
-				'default' => __('Pembayaran Duitku', 'wc-duitku'),
-			),
-			'description' => array(
+				'default' => __('Pembayaran Duitku LinkAja QRIS', 'wc-duitku'),
+				'desc_tip'      => true,
+			  ),
+			  'description' => array(
 				'title' => __('Description', 'wc-duitku'),
 				'type' => 'textarea',
 				'description' => __('', 'wc-duitku'),
-				'default' => 'Sistem pembayaran menggunakan Duitku.',
-			),
-			'duitku_expiry_period' => array(
-				'title' => __('Expired Period', 'wc-duitku'),
-				'type' => 'number',
-				'text', 'description' => __('', 'wc-duitku'),
-				'description' => __('Masa berlaku transaksi sebelum kedaluwarsa. example <code>1 - 60 ( menit )</code>', 'wc-duitku'),
-				'default' => __('5', 'wc-duitku'),
-				'custom_attributes' => array(
-					'min'       =>  1,
-					'max'       =>  60,
-				),
-			),
-		);
-	}
+				'default' => 'Sistem pembayaran menggunakan Duitku.'
+			  ),
+			  'duitku_expiry_period' => array(
+					'title' => __('Expired Period', 'wc-duitku'),
+					'type' => 'number',
+					'text', 'description' => __('', 'wc-duitku'),
+					'description' => __('Masa berlaku transaksi sebelum kedaluwarsa. example <code>1 - 60 ( menit )</code>', 'wc-duitku'),
+					'default' => __('5', 'wc-duitku'),
+					'custom_attributes' => array(
+						'min'       =>  1,
+						'max'       =>  60,
+					),
+				  ),
+			);
+}
+
+
 
  }
 

@@ -1,0 +1,23 @@
+{
+	"name": "woocommerce-duitku-v2-block",
+	"title": "WooCommerce Duitku V2 Blocks",
+	"version": "2.11.11",
+	"author": "Duitku",
+	"license": "GPL-3.0+",
+	"keywords": [],
+	"engines": {
+		"node": "^20.12.0",
+		"npm": "^10.5.0"
+	},
+	"devDependencies": {
+		"@woocommerce/dependency-extraction-webpack-plugin": "2.2.0",
+		"@wordpress/scripts": "^28.5.0",
+		"cross-env": "7.0.3"
+	},
+	"scripts": {
+		"start": "wp-scripts start",
+		"build": "wp-scripts build",
+		"packages-update": "wp-scripts packages-update",
+		"check-engines": "wp-scripts check-engines"
+	}
+}

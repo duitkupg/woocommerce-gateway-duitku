@@ -29,39 +29,37 @@
 		$this->method_title = 'Duitku ShopeePay Applink';
 	    $this->payment_method = 'SA';
 	    //payment gateway logo
-	    $this->icon = plugins_url('/assets/shopee_applink.png', dirname(__FILE__) );
+	    $this->icon = plugins_url('/assets/duitku_shopeepay_applink.png', dirname(__FILE__) );
 
 		//Load settings
 		$this->init_form_fields();
 		$this->init_settings();
 	}
 
-	/**
-	 * set field for each payment gateway
-	 * @return void
-	 */
-	function init_form_fields() {
+	function init_form_fields()
+	{
 
-		$this->form_fields = array(
-			'enabled' => array(
+			$this->form_fields = array(
+			  'enabled' => array(
 				'title' => __('Enable/Disable', 'wc-duitku'),
-				'label' => __('Enable Duitku', 'wc-duitku'),
-				'type' => 'checkbox', 'description' => '',
-				'default' => 'no',
-			),
-			'title' => array(
+				'type' => 'checkbox',
+				'label' => __('Enable Duitku Payment', 'wc-duitku'),
+				'default' => 'no'
+			  ),
+			  'title' => array(
 				'title' => __('Title', 'wc-duitku'),
 				'type' => 'text',
 				'description' => __('', 'wc-duitku'),
-				'default' => __('Pembayaran Duitku', 'wc-duitku'),
-			),
-			'description' => array(
+				'default' => __('Pembayaran Duitku ShopeePay Applink', 'wc-duitku'),
+				'desc_tip'      => true,
+			  ),
+			  'description' => array(
 				'title' => __('Description', 'wc-duitku'),
 				'type' => 'textarea',
 				'description' => __('', 'wc-duitku'),
-				'default' => 'Sistem pembayaran menggunakan Duitku.',
-			),
-			'duitku_expiry_period' => array(
+				'default' => 'Sistem pembayaran menggunakan Duitku.'
+			  ),
+			  'duitku_expiry_period' => array(
 				'title' => __('Expired Period', 'wc-duitku'),
 				'type' => 'number',
 				'text', 'description' => __('', 'wc-duitku'),
@@ -71,9 +69,10 @@
 					'min'       =>  1,
 					'max'       =>  60,
 				),
-			),
-		);
+			  ),
+			);
 	}
+
 
  }
 
