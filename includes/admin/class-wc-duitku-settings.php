@@ -134,6 +134,9 @@ class Duitku_Settings {
 		}else
 		if ( $chosen_gateway == 'duitku_dana' ) {
 			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('DA') );
+		}else
+		if ( $chosen_gateway == 'duitku_indomaret' ) {
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('IR') );
 		}
 	}
 
@@ -222,7 +225,7 @@ class Duitku_Settings {
 			(function($){
 				$( 'form.checkout' ).on( 'change', 'input[name^="payment_method"]', function() {
 					$('body').trigger('update_checkout');
-					alert(p);
+					// alert(p); //uncomment for testing
 				});
 			})(jQuery);
 		</script>

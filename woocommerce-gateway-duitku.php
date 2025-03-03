@@ -534,6 +534,7 @@ function woocommerce_duitku_init() {
 		$methods[] = 'WC_Gateway_Duitku_VA_ARTHA';
 		$methods[] = 'WC_Gateway_Duitku_VA_SAMPOERNA';
 		$methods[] = 'WC_Gateway_Duitku_LINKAJA_QRIS';
+		$methods[] = 'WC_Gateway_Duitku_INDOMARET';
 		return $methods;
 	}
 
