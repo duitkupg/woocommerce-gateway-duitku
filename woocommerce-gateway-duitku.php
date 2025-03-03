@@ -2,10 +2,10 @@
 
 /*
 Plugin Name: Duitku Payment Gateway
-Description: Duitku Payment Gateway Version: 2.11.7
+Description: Duitku Payment Gateway Version: 2.11.8
 Author: Duitku
 Author URI: https://www.duitku.com/
-Version: 2.11.7
+Version: 2.11.8
 URI: http://www.duitku.com
 
 improvement 1.3 to 1.4:
@@ -88,6 +88,9 @@ improvement 2.11.5 to 2.11.6
 improvement 2.11.6 to 2.11.7
 -improvement for signature validation in callback
 -fix failing status from check transaction
+
+improvement 2.11.7 to 2.11.8
+-fix process fees in signature validation
  */
 
 if (!defined('ABSPATH')) {
@@ -183,7 +186,37 @@ function woocommerce_duitku_init() {
 				$this->generate_settings_html();
 				echo '</table>';
 			}
+			
+			public function process_fees($order, $item_details) {
+				
+				$item_details = $item_details;
+				$totalAmount = intval($order->order_total);
 
+				if (sizeof($order->get_fees()) > 0) {
+					$fees = $order->get_fees();
+					foreach ($fees as $item) {
+
+						if ($item['name'] == __('Surcharge', 'wc-duitku')) {
+							$totalAmount -= round($item['line_total']);
+							continue;
+						}
+
+						$item_details[] = array(
+							'name' => $item['name'],
+							'price' => round($item['line_total']),
+							'quantity' => 1
+						);
+
+						$totalAmount += round($item['line_total']);
+					}
+				}
+
+				return array(
+					'item_details' => $item_details,
+					'total_amount' => $totalAmount
+				);
+			}
+			
 			/**
 			 * @param $order_id
 			 * @return null
@@ -218,7 +251,6 @@ function woocommerce_duitku_init() {
 				  );
 				}
 								
-
 				// Shipping fee as item_details
 				if( $order->get_total_shipping() > 0 ) {
 				  $item_details[] = array(
@@ -245,26 +277,11 @@ function woocommerce_duitku_init() {
 					'quantity' => 1
 				  );
 				}
-
-				// Fees as item_details
-				if ( sizeof( $order->get_fees() ) > 0 ) {
-				  $fees = $order->get_fees();
-				  $i = 0;
-				  foreach( $fees as $item ) {
-
-					if ( $item['name'] == __('Surcharge', 'wc-duitku') ) {
-					  $totalAmount = $totalAmount - round($item['line_total']);
-					  continue;
-					}
-
-					$item_details[] = array(
-					  'name' => $item['name'],
-					  'price' => round($item['line_total']),
-					  'quantity' => 1
-					);
-					$i++;
-				  }
-				}
+				
+				$fees_data = $this->process_fees($order, $item_details);
+				$item_details = $fees_data['item_details'];
+				$totalAmount = $fees_data['total_amount'];
+				
 
 				$billing_address = array(
 				  'firstName' => $order->billing_first_name,
@@ -286,7 +303,6 @@ function woocommerce_duitku_init() {
 				);
 
 				//generate Signature
-	
 				$signature = md5($this->merchantCode . $this->prefix . $order_id . $totalAmount . $this->apikey);
 				
 				if ( isset($this->tipe) ) {
@@ -447,7 +463,12 @@ function woocommerce_duitku_init() {
 				$reqSignature = wc_clean(stripslashes($params['signature']));
 
 				$order = new WC_Order($order_id);
-				$amount = intval($order->order_total);
+				$item_details = [];
+				
+				$fees_data = $this->process_fees($order, $item_details);
+				$item_details = $fees_data['item_details'];
+				$amount = $fees_data['total_amount'];
+				
 				
 				//signature validation
 				$signature = md5($this->merchantCode . $amount . $this->prefix . $order_id . $this->apikey);
@@ -560,7 +581,7 @@ function woocommerce_duitku_init() {
 				$resp = json_decode($response_body);
 
 				$this->log("response Body: " . $response_body);
-				$this->log("receive response HTTP Code: " . $response_code . "with status code check transaction: " . $resp->statusCode);
+				$this->log("receive response HTTP Code: " . $response_code . " with status code check transaction: " . $resp->statusCode);
 
 				if ($response_code == '200') {
 					return $response_body;

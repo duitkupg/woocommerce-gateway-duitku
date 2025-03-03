@@ -3,7 +3,7 @@
 PPlugin Name:  Duitku Payment Gateway
 Plugin URI:   https://docs.duitku.com/#woocommerce-duitku
 Description:  Duitku Payment Gateway 
-Version:      2.11.7
+Version:      2.11.8
 Author:       Duitku Development Team
 Contributors: anggiyawan@duitku.com, hanithiojuwono, rayhanduitku
 Author URI:   http://duitku.com
@@ -102,6 +102,9 @@ Integrating online payments with Duitku is very easy, web integration using our 
 4. Duitku Global Configuration Settings
 
 == Changelog ==
+= 2.11.8 April 3, 2024 =
+-Fix process fees in signature validation
+
 = 2.11.7 March 8, 2024 =
 -Improvement for signature validation in callback
 -Fix failing status from check transaction
