@@ -2,9 +2,9 @@
 
 /*
 Plugin Name: Duitku Payment Gateway
-Description: Duitku Payment Gateway Version: 2.6
+Description: Duitku Payment Gateway Version: 2.9
 Author: https://www.duitku.com/
-Version: 2.6
+Version: 2.9
 URI: http://www.duitku.com
 
 improvement 1.3 to 1.4:
@@ -51,6 +51,12 @@ improvement 2.5 to 2.6
 
 improvement 2.6 to 2.7
 - add LinkAja QRIS.
+
+improvement 2.7 to 2.8
+- add Indomaret.
+
+improvement 2.8 to 2.9
+- add Pos Indonesia.
 
  */
 
@@ -535,6 +541,7 @@ function woocommerce_duitku_init() {
 		$methods[] = 'WC_Gateway_Duitku_VA_SAMPOERNA';
 		$methods[] = 'WC_Gateway_Duitku_LINKAJA_QRIS';
 		$methods[] = 'WC_Gateway_Duitku_INDOMARET';
+		$methods[] = 'WC_Gateway_Duitku_POS';
 		return $methods;
 	}
 

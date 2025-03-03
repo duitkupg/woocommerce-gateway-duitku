@@ -137,6 +137,9 @@ class Duitku_Settings {
 		}else
 		if ( $chosen_gateway == 'duitku_indomaret' ) {
 			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('IR') );
+		}else
+		if ( $chosen_gateway == 'duitku_pospay' ) {
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('A2') );
 		}
 	}
 
@@ -308,6 +311,9 @@ class Duitku_Settings {
 				'desc' => '<br />' . __('Prefix order id. Dapat digunakan untuk custom order id', 'wc-duitku'),
 				'id' => self::$option_prefix . '_prefix',
 				'type' => 'text',
+				'custom_attributes' => array( 
+					'maxlength' => '10'
+				 ),
 				'css' => 'width:25em;',
 				'default' => '',
 			),
