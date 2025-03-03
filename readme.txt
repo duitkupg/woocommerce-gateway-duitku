@@ -3,14 +3,14 @@
 PPlugin Name:  Duitku Payment Gateway
 Plugin URI:   https://docs.duitku.com/#woocommerce-duitku
 Description:  Duitku Payment Gateway 
-Version:      2.9
+Version:      2.10
 Author:       Duitku Development Team
 Contributors: anggiyawan@duitku.com, hanithiojuwono, rayhanduitku
 Author URI:   http://duitku.com
 Tags:         paymentgateway, duitku, BCA, Mandiri, BRI, CIMB, BNI
 Requires at least: 4.7
 Tested up to: 5.6
-Stable tag: 2.9
+Stable tag: 2.10
 Requires PHP: 7.0
 Author URI:   http://duitku.com
 License:      GPLv2 or Later
@@ -45,9 +45,10 @@ Supported Payment Channels :
 19.	LinkAja Apps (Percentage Fee)
 20.	LinkAja Apps (Fixed Fee)
 21.	DANA
-22. LinkAja QRIS
-23. Indomaret
-24. PosPay
+22.	LinkAja QRIS
+23.	Indomaret
+24.	PosPay
+24.	BNC
 
 == Installation ==
 
@@ -98,6 +99,10 @@ Integrating online payments with Duitku is very easy, web integration using our 
 4. Duitku Global Configuration Settings
 
 == Changelog ==
+
+= 2.10 Mar 03, 2022 =
+-Add Bank Neo Commerce
+-Remove Deprecated Mandiri Channel
 
 = 2.9 Sept 13, 2021 =
 -Add PosPay

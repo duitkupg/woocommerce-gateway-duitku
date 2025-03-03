@@ -2,9 +2,9 @@
 
 /*
 Plugin Name: Duitku Payment Gateway
-Description: Duitku Payment Gateway Version: 2.9
+Description: Duitku Payment Gateway Version: 2.10
 Author: https://www.duitku.com/
-Version: 2.9
+Version: 2.10
 URI: http://www.duitku.com
 
 improvement 1.3 to 1.4:
@@ -45,18 +45,23 @@ improvement 2.4 to 2.5
 - Add Credit Card Facilitator
 
 improvement 2.5 to 2.6
-- add DANA Payment.
-- add LinkAja Payment.
-- add Sanitized & Validation Email and Phone Number feature
+- Add DANA Payment.
+- Add LinkAja Payment.
+- Add Sanitized & Validation Email and Phone Number feature
 
 improvement 2.6 to 2.7
-- add LinkAja QRIS.
+- Add LinkAja QRIS.
 
 improvement 2.7 to 2.8
-- add Indomaret.
+- Add Indomaret.
 
 improvement 2.8 to 2.9
-- add Pos Indonesia.
+- Add Pos Indonesia.
+
+improvement 2.9 to 2.10
+- Add BRI Virtual Account.
+- Add Bank Neo Commerce.
+- Remove Deprecated Mandiri
 
  */
 
@@ -527,7 +532,6 @@ function woocommerce_duitku_init() {
 		$methods[] = 'WC_Gateway_Duitku_VA_ATM_Bersama';
 		$methods[] = 'WC_Gateway_Duitku_VA_BNI';
 		$methods[] = 'WC_Gateway_Duitku_VA_BCA';
-		$methods[] = 'WC_Gateway_Duitku_VA_MANDIRI';
 		$methods[] = 'WC_Gateway_Duitku_VA_MANDIRI_H2H';
 		$methods[] = 'WC_Gateway_Duitku_VA_CIMB_Niaga';
 		$methods[] = 'WC_Gateway_Duitku_VA_Maybank';
@@ -542,6 +546,7 @@ function woocommerce_duitku_init() {
 		$methods[] = 'WC_Gateway_Duitku_LINKAJA_QRIS';
 		$methods[] = 'WC_Gateway_Duitku_INDOMARET';
 		$methods[] = 'WC_Gateway_Duitku_POS';
+		$methods[] = 'WC_Gateway_Duitku_BNC';
 		return $methods;
 	}
 

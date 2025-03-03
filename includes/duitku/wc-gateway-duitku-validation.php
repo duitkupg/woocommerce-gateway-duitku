@@ -30,11 +30,14 @@ class WC_Gateway_Duitku_Validation
 		}
             
         if (!filter_var($json['email'], FILTER_VALIDATE_EMAIL)) {
-            throw new Exception(__('The email address entered did not appear to be a valid email address. Please enter a valid email address.', 'wc-duitku'));
+        throw new Exception(__('The email address entered did not appear to be a valid email address. Please enter a valid email address.', 'wc-duitku'));
         }
 		
         if (filter_var($json['phoneNumber'], FILTER_VALIDATE_INT)) {
-            throw new Exception(__('The phone number entered did not appear to be a valid phoneNumber address. Please enter a valid phone number.', 'wc-duitku'));
-        }
+        throw new Exception(__('The phone number entered did not appear to be a valid phoneNumber address. Please enter a valid phone number.', 'wc-duitku'));
     }
+	
+
+  
+}
 }

@@ -5,9 +5,9 @@
  }
 
 /**
- * Duitku VA MANDIRI
+ * Duitku VA Ritel
  *
- * This gateway is used for processing online payment using VA MANDIRI
+ * This gateway is used for processing online payment using VA Ritel
  *
  * Copyright (c) Duitku
  *
@@ -15,22 +15,21 @@
  * you have found this script useful a small recommendation as well as a
  * comment on merchant form would be greatly appreciated.
  *
- * @class       WC_Gateway_Duitku_VA_MANDIRI
+ * @class       WC_Gateway_Duitku_VA_Ritel
  * @extends     Duitku_Payment_Gateway
  * @package     Duitku/Classes/Payment
  * @author      Duitku
  * @located at  /includes/gateways
  */
 
- class WC_Gateway_Duitku_VA_MANDIRI extends Duitku_Payment_Gateway {
-    var $sub_id = 'duitku_va_mandiri';
+ class WC_Gateway_Duitku_BNC extends Duitku_Payment_Gateway {
+    var $sub_id = 'duitku_bnc';
         public function __construct() {
 	    parent::__construct();
-            $this->method_title = 'Duitku VA Mandiri (Deprecated)';
-	    $this->payment_method = 'M1';
-		$this->method_description = 'This payment method will be removed in future release';
+            $this->method_title = 'Duitku BNC/Bank Neo Commerce';
+	    $this->payment_method = 'NC';
 	    //payment gateway logo
-	    $this->icon = plugins_url('/assets/mandiri.png', dirname(__FILE__) );
+	    $this->icon = plugins_url('/assets/bnc.png', dirname(__FILE__) );
 		
 		//Load settings
 		$this->init_form_fields();

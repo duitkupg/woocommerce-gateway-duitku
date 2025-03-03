@@ -93,9 +93,6 @@ class Duitku_Settings {
 		if ( $chosen_gateway == 'duitku_va_bni' ) {
 			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('I1') );
 		} else
-		if ( $chosen_gateway == 'duitku_va_mandiri' ) {
-			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('M1') );
-		} else
 		if ( $chosen_gateway == 'duitku_va_mandiri_h2h' ) {
 			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('M2') );
 		} else
@@ -140,6 +137,9 @@ class Duitku_Settings {
 		}else
 		if ( $chosen_gateway == 'duitku_pospay' ) {
 			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('A2') );
+		}else
+		if ( $chosen_gateway == 'duitku_bnc' ) {
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('NC') );
 		}
 	}
 
@@ -311,9 +311,6 @@ class Duitku_Settings {
 				'desc' => '<br />' . __('Prefix order id. Dapat digunakan untuk custom order id', 'wc-duitku'),
 				'id' => self::$option_prefix . '_prefix',
 				'type' => 'text',
-				'custom_attributes' => array( 
-					'maxlength' => '10'
-				 ),
 				'css' => 'width:25em;',
 				'default' => '',
 			),
