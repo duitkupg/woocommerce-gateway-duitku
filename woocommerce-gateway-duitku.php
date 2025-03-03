@@ -2,10 +2,10 @@
 
 /*
 Plugin Name: Duitku Payment Gateway
-Description: Duitku Payment Gateway Version: 2.11.6
+Description: Duitku Payment Gateway Version: 2.11.7
 Author: Duitku
 Author URI: https://www.duitku.com/
-Version: 2.11.6
+Version: 2.11.7
 URI: http://www.duitku.com
 
 improvement 1.3 to 1.4:
@@ -80,10 +80,14 @@ removing feature 2.11.3 to 2.11.4
 - Remove Sampoerna VA 
 
 improvement 2.11.4 to 2.11.5
-- Add new Payment Gudang Voucher QRIS
+- Add new Payment Jenius Pay
 
 improvement 2.11.5 to 2.11.6
 - Add new Payment Jenius Pay
+
+improvement 2.11.6 to 2.11.7
+-improvement for signature validation in callback
+-fix failing status from check transaction
  */
 
 if (!defined('ABSPATH')) {
@@ -367,7 +371,7 @@ function woocommerce_duitku_init() {
 
 				//log response from server
 				$this->log('response body: ' . $response_body);
-				$this->log('response code: ' . $response_code);
+				$this->log('response HTTP code: ' . $response_code);
 				$this->log($url);
 				
 				// means the transaction was a success
@@ -420,6 +424,7 @@ function woocommerce_duitku_init() {
 				$params['status'] = isset($_REQUEST['status'])? sanitize_text_field($_REQUEST['status']): null;
 
 				$params['merchantOrderId'] = str_replace($this->prefix,'',$params['merchantOrderId']);
+
 				if (empty($params['resultCode']) || empty($params['merchantOrderId']) || empty($params['reference'])) {
 					throw new Exception(__('wrong query string please contact admin.',
 						'duitku'));
@@ -435,20 +440,49 @@ function woocommerce_duitku_init() {
 				//if callback request proceed to payment
 
 				$order_id = wc_clean(stripslashes($params['merchantOrderId']));
-				$status = wc_clean(stripslashes($params['resultCode']));
+				$result_Code = wc_clean(stripslashes($params['resultCode']));
 				$reference = wc_clean(stripslashes($params['reference']));
+				
+				$params['signature']= isset($_REQUEST['signature'])? sanitize_text_field($_REQUEST['signature']): null;
+				$reqSignature = wc_clean(stripslashes($params['signature']));
 
 				$order = new WC_Order($order_id);
-
-				if ($status == '00' && $this->validate_transaction($this->prefix . $order_id, $reference)) {
-					$order->payment_complete();
-					$order->add_order_note(__('Pembayaran telah dilakukan melalui duitku dengan id ' . $this->prefix . $order_id . ' Dan No Reference ' . $reference, 'woocommerce'));
-					$this->log("Pembayaran dengan order ID " . $order_id . " telah berhasil.");
-				}else {
-					$order->update_status('failed');
-					$order->add_order_note('Pembayaran dengan duitku tidak berhasil');
-					$this->log("Pembayaran dengan order ID " . $order_id . " gagal.");					
+				$amount = intval($order->order_total);
+				
+				//signature validation
+				$signature = md5($this->merchantCode . $amount . $this->prefix . $order_id . $this->apikey);
+				if($reqSignature == $signature){
+					$this->log("Signature valid");
+				}else{
+					$this->log("Invalid signature!");
+					exit;
 				}
+
+				if($result_Code == "00"){
+					$respon = json_decode($this->validate_transaction($this->prefix . $order_id));
+					if($respon->statusCode == "00"){
+						$order->payment_complete();
+						$order->add_order_note(__("Pembayaran telah dilakukan melalui Duitku dengan ID " . $this->prefix . $order_id . ' dan No Reference ' . $reference, 'woocommerce'));
+						$this->log("Pembayaran dengan order ID " . $order_id . " telah berhasil.");
+					}else if($respon->statusCode == "01"){
+						$this->log("Pembayaran dengan order ID " . $order_id . " tertunda.");
+					}else{
+						$this->log("Callback diterima dengan result code " . $result_Code . " untuk Order ID " . $order_id . " dan hasil validasi cek transaksi status code " . $respon->statusCode);
+					}
+					}else if($result_Code == "01"){
+						$respon = json_decode($this->validate_transaction($this->prefix . $order_id));
+						if($respon->statusCode == "02"){
+							$order->update_status("failed");
+							$order->add_order_note("Pembayaran dengan Duitku gagal");
+							$this->log("Pembayaran dengan order ID " . $order_id . "gagal");
+						}else if($respon->statusCode == "01"){
+							$this->log("Pembayaran dengan order ID " . $order_id . " tertunda.");
+						}else{
+							$this->log("Callback diterima dengan result code " . $result_Code . " untuk Order ID " . $order_id . " dan hasil validasi cek transaksi status code " . $respon->statusCode);
+						}
+					}else{
+							$this->log("Callback diterima dengan result code " . $result_Code . " untuk Order ID " . $order_id);
+					}
 
 				exit;
 			}
@@ -488,7 +522,7 @@ function woocommerce_duitku_init() {
 			 * @param $order_id
 			 * @param $reference
 			 */
-			protected function validate_transaction($order_id, $reference) {
+			protected function validate_transaction($order_id) {
 
 				$order = new WC_Order($order_id);
 
@@ -502,8 +536,7 @@ function woocommerce_duitku_init() {
 				$params = array(
 					'merchantCode' => $this->merchantCode, // API Key Merchant /
 					'merchantOrderId' => $order_id,
-					'signature' => $signature,
-					'reference' => $reference,
+					'signature' => $signature
 				);
 
 				$headers = array('Content-Type' => 'application/json');
@@ -511,30 +544,31 @@ function woocommerce_duitku_init() {
 				// show request for inquiry
 				$this->log("validate transaction:");
 				$this->log(var_export($params, true));
+				$this->log("validate url: " . $url);
 
 				$response = wp_remote_post($url, array(
-					'method' => 'POST', 'body' => json_encode($params), 'timeout' => 90, 'sslverify' => false, 'headers' => $headers,
+					'method' => 'POST', 
+					'body' => json_encode($params), 
+					'timeout' => 90, 
+					'sslverify' => false, 
+					'headers' => $headers,
 				));
 
 				// Retrieve the body's resopnse if no errors found
 				$response_body = wp_remote_retrieve_body($response);
 				$response_code = wp_remote_retrieve_response_code($response);
+				$resp = json_decode($response_body);
 
 				$this->log("response Body: " . $response_body);
-				$this->log("response Code: " . $response_code);
+				$this->log("receive response HTTP Code: " . $response_code . "with status code check transaction: " . $resp->statusCode);
 
 				if ($response_code == '200') {
-					// Parse the response into something we can read
-					$resp = json_decode($response_body);
-					if ($resp->statusCode == '00') {
-						return true;
-					}
-
+					return $response_body;
 				} else {
 					$this->log($response_body);
 				}
 
-				return false;
+				exit;
 			}
 
 			/**
