@@ -3,7 +3,7 @@
 Plugin Name:  Duitku Payment Gateway
 Plugin URI:   https://developer.wordpress.org/plugins/the-basics/
 Description:  Duitku Payment Gateway 
-Version:      2.4
+Version:      2.5
 Author:       Duitku Development Team
 
 Author URI:   http://duitku.com
@@ -18,6 +18,12 @@ Install & activate the plugin. Modify some options in the settings page to suits
 
 -
 == Changelog ==
+
+= 2.5 Nov 16, 2020 =
+
+improvement 2.4 to 2.5
+- Change Mandiri Virtual Account become Deprecated
+- Add VA Mandiri Direct
 
 = 2.4 Nov 06, 2020 =
 

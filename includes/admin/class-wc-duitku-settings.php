@@ -82,9 +82,6 @@ class Duitku_Settings {
 		if ( $chosen_gateway == 'duitku_credit_card' ) {
 			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('VC') );
 		} else
-		if ( $chosen_gateway == 'duitku_credit_card_so' ) {
-			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('SO') );
-		} else
 		if ( $chosen_gateway == 'duitku_bca' ) {
 			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('BK') );
 		} else
@@ -99,6 +96,9 @@ class Duitku_Settings {
 		} else
 		if ( $chosen_gateway == 'duitku_va_mandiri' ) {
 			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('M1') );
+		} else
+		if ( $chosen_gateway == 'duitku_va_mandiri_h2h' ) {
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('M2') );
 		} else
 		if ( $chosen_gateway == 'duitku_va_cimb_niaga' ) {
 			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('B1') );
@@ -123,6 +123,9 @@ class Duitku_Settings {
 		}else
 		if ( $chosen_gateway == 'duitku_va_bca' ) {
 			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('BC') );
+		}else
+		if ( $chosen_gateway == 'duitku_credit_card_migs' ) {
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('MG') );
 		}
 	}
 
@@ -287,6 +290,13 @@ class Duitku_Settings {
 				'id' => self::$option_prefix . '_endpoint',
 				'type' => 'text',
 				'css' => 'width:25em;',
+				'default' => '',
+			),
+			array(
+				'title' => __('Credential Code', 'wc_duitku'),
+				'desc' => '<br />' . __('Masukkan kode kredensial anda. Kode ini hanya digunakan untuk payment method Credit Card MIGS.', 'wc-duitku'),
+				'id' => self::$option_prefix . '_credential_code',
+				'type' => 'text',
 				'default' => '',
 			),
 			array(

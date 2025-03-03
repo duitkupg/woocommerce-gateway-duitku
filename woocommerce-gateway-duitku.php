@@ -2,9 +2,9 @@
 
 /*
 Plugin Name: Duitku Payment Gateway
-Description: Duitku Payment Gateway Version: 2.4
+Description: Duitku Payment Gateway Version: 2.5
 Author: Duitku Development Team
-Version: 2.4
+Version: 2.5
 URI: http://www.duitku.com
 
 improvement 1.3 to 1.4:
@@ -38,6 +38,11 @@ improvement 2.2 to 2.3:
 improvement 2.3 to 2.4
 - Change Logo Indodana
 
+improvement 2.4 to 2.5
+- Change Mandiri Virtual Account become Deprecated
+- Remove Credit Card SO
+- Add Mandiri Direct Virtual Account
+- Add Credit Card Facilitator
  */
 
 if (!defined('ABSPATH')) {
@@ -102,6 +107,7 @@ function woocommerce_duitku_init() {
 				$this->apikey = get_option('duitku_api_key');
 				$this->merchantCode = get_option('duitku_merchant_code');
 				$this->expiryPeriod = (isset($this->settings['duitku_expiry_period'])) ? $this->settings['duitku_expiry_period'] : 1440;
+				$this->credCode = get_option('duitku_credential_code');
 				self::$log_enabled = get_option('duitku_debug');
 
 				// remove trailing slah and add one for our need.
@@ -254,6 +260,10 @@ function woocommerce_duitku_init() {
 					'customerDetail' => $customerDetails,
 					'itemDetails' => $item_details
 				);
+				if ($this->payment_method == "MG") {
+					$url = $this->endpoint . '/api/merchant/creditcard/inquiry';
+					$params['credCode'] = $this->credCode;
+				}
 
 				$headers = array('Content-Type' => 'application/json');
 
@@ -475,13 +485,14 @@ function woocommerce_duitku_init() {
 	function add_duitku_gateway($methods) {
 		$methods[] = 'WC_Gateway_Duitku_OVO';
 		$methods[] = 'WC_Gateway_Duitku_CC';
-		$methods[] = 'WC_Gateway_Duitku_CC_SO';
+		$methods[] = 'WC_Gateway_Duitku_CC_MIGS';
 		$methods[] = 'WC_Gateway_Duitku_BCA';
 		$methods[] = 'WC_Gateway_Duitku_VA_Permata';
 		$methods[] = 'WC_Gateway_Duitku_VA_ATM_Bersama';
 		$methods[] = 'WC_Gateway_Duitku_VA_BNI';
 		$methods[] = 'WC_Gateway_Duitku_VA_BCA';
 		$methods[] = 'WC_Gateway_Duitku_VA_MANDIRI';
+		$methods[] = 'WC_Gateway_Duitku_VA_MANDIRI_H2H';
 		$methods[] = 'WC_Gateway_Duitku_VA_CIMB_Niaga';
 		$methods[] = 'WC_Gateway_Duitku_VA_Maybank';
 		$methods[] = 'WC_Gateway_Duitku_VA_Ritel';
