@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: Duitku Payment Gateway
-Description: Duitku Payment Gateway API V2: 2.11.11
-Version: 2.11.11
+Description: Duitku Payment Gateway API V2: 2.11.12
+Version: 2.11.12
 
 Author: Duitku
 Author URI: https://www.duitku.com/
@@ -102,6 +102,9 @@ improvement 2.11.9 to 2.11.10
 
 improvement 2.11.10 to 2.11.11
 - Woocommerce Duitku Payment Gateway API V2 Support Blocks Checkout
+
+improvement 2.11.10 to 2.11.12
+- Add new payment Nusapay QRIS
  */
 
 // Exit if accessed directly.
@@ -165,6 +168,7 @@ class WC_Duitku_Payments{
 			$methods[] = 'WC_Gateway_Duitku_GUDANG_VOUCHER_QRIS';
 			$methods[] = 'WC_Gateway_Duitku_VA_DANAMON_H2H';
 			$methods[] = 'WC_Gateway_Duitku_VA_BSI';
+			$methods[] = 'WC_Gateway_Duitku_NUSAPAY_QRIS';
 			return $methods;
 		}
 
@@ -219,6 +223,7 @@ class WC_Duitku_Payments{
 			require_once 'includes/blocks/class-wc-gateway-duitku-gudang-voucher-qris-blocks.php';
 			require_once 'includes/blocks/class-wc-gateway-duitku-va-danamon-h2h-blocks.php';
 			require_once 'includes/blocks/class-wc-gateway-duitku-va-bsi-blocks.php';
+			require_once 'includes/blocks/class-wc-gateway-duitku-nusapay-qris-blocks.php';
 			add_action(
 				'woocommerce_blocks_payment_method_type_registration',
 				function( Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry $payment_method_registry ) {
@@ -252,6 +257,7 @@ class WC_Duitku_Payments{
 					$payment_method_registry->register( new WC_Gateway_Duitku_GUDANG_VOUCHER_QRIS_Blocks() );
 					$payment_method_registry->register( new WC_Gateway_Duitku_VA_DANAMON_H2H_Blocks() );
 					$payment_method_registry->register( new WC_Gateway_Duitku_VA_BSI_Blocks() );
+					$payment_method_registry->register( new WC_Gateway_Duitku_NUSAPAY_QRIS_Blocks() );
 				}
 			);
 		}
