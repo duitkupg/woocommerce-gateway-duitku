@@ -141,3 +141,5 @@ registerDuitkuPaymentMethod('duitku_va_sampoerna', ('Duitku VA Sampoerna', 'wc-d
 registerDuitkuPaymentMethod('duitku_va_artha', ('Duitku VA Artha Graha', 'wc-duitku'));
 registerDuitkuPaymentMethod('duitku_va_danamon_h2h', ('Duitku VA Danamon', 'wc-duitku'));
 registerDuitkuPaymentMethod('duitku_va_bsi', ('Duitku VA BSI', 'wc-duitku'));
+registerDuitkuPaymentMethod('duitku_nusapay_qris', ('Duitku Nusapay QRIS', 'wc-duitku'));
+
