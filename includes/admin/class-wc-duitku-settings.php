@@ -97,6 +97,8 @@ class Duitku_Settings {
 						wc()->session->set('chosen_payment_method', 'duitku_linkaja_applink');
 					}elseif ($chosen_method === 'duitku_nusapay_qris' ) {
 						wc()->session->set('chosen_payment_method', 'duitku_nusapay_qris');
+					}elseif ($chosen_method === 'duitku_bni_qris' ) {
+						wc()->session->set('chosen_payment_method', 'duitku_bni_qris');
 					}
 					else {
 						wc()->session->set('chosen_payment_method', $chosen_method);
@@ -197,6 +199,8 @@ class Duitku_Settings {
 			WC()->cart->add_fee(__('Surcharge', 'wc-duitku'), self::get_fee('BV') );
 		}elseif ( $chosen_gateway === 'duitku_nusapay_qris' ) {
 			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('SQ') );
+		}elseif ( $chosen_gateway === 'duitku_bni_qris' ) {
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('IQ') );
 		}
 		else {
         error_log('Surcharge not added for chosen gateway: ' . $chosen_gateway);
