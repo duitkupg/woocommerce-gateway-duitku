@@ -61,7 +61,12 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 				self::$log_enabled = get_option('duitku_debug');
 
 				// remove trailing slah and add one for our need.
-				$this->endpoint = rtrim(get_option('duitku_endpoint'), '/');
+				$environment	= (get_option('duitku_environment'));
+				if ($environment == "production") {
+					$this->endpoint = "https://passport.duitku.com/webapi";
+				} else {
+					$this->endpoint = "https://sandbox.duitku.com/webapi";
+				}
 
 				self::$log_enabled = get_option('duitku_debug') == 'yes' ? true : false;
 
