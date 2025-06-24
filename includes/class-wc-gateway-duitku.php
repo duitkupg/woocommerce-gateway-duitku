@@ -15,6 +15,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Duitku_Payment_gateway extends WC_Payment_Gateway {
 
+	 /** Add class for Depreceated variable */
+	public $payment_method = '';
+	public $redirect_url;
+	public $apiKey;
+	public $merchantCode;
+	public $expiryPeriod;
+	public $prefix;
+	public $pluginStatus;
+	public $lang;
+	public $currency;
+	public $tipe;
+	public $credCode;
+	public $endpoint;
 	/** @var bool whether or not logging is enabled */
 			public static $log_enabled = false;
 
