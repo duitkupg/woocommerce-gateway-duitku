@@ -110,6 +110,8 @@ Integrating online payments with Duitku is very easy, web integration using our 
 
 = 2.11.13 May 08, 2025 =
 - Add new payment BNI QRIS
+- Update Setting from Endpoint input to Environment dropdown
+- Update URL for payment MG to use V2 Inquiry
 
 = 2.11.12 Feb 25, 2025 =
 - Add new payment Nusapay QRIS
