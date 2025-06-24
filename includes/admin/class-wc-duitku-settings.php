@@ -365,13 +365,6 @@ class Duitku_Settings {
 				'maxlength' => 2,
 			),
 			array(
-				'title' => esc_html('Credential Code', 'wc_duitku'),
-				'desc' => '<br />' . esc_html('Masukkan kode kredensial anda. Kode ini hanya digunakan untuk payment method Credit Card MIGS.', 'wc-duitku'),
-				'id' => self::$option_prefix . '_credential_code',
-				'type' => 'text',
-				'default' => '',
-			),
-			array(
 				'title' => esc_html('Duitku Debug', 'wc_duitku'),
 				'desc' => '<br />' . sprintf(__('Duitku Log dapat digunakan untuk melihat event, seperti notifikasi pembayaran.
                 	<code>%s</code> ', 'woothemes'), wc_get_log_file_path('duitku')),
