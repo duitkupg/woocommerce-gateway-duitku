@@ -56,12 +56,16 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 				$this->merchantCode = get_option('duitku_merchant_code');
 				$this->prefix = get_option('duitku_prefix');
 				$this->expiryPeriod = (isset($this->settings['duitku_expiry_period'])) ? $this->settings['duitku_expiry_period'] : 1440;
-				$this->credCode = get_option('duitku_credential_code');
 
 				self::$log_enabled = get_option('duitku_debug');
 
 				// remove trailing slah and add one for our need.
-				$this->endpoint = rtrim(get_option('duitku_endpoint'), '/');
+				$environment	= (get_option('duitku_environment'));
+				if ($environment == "production") {
+					$this->endpoint = "https://passport.duitku.com/webapi";
+				} else {
+					$this->endpoint = "https://sandbox.duitku.com/webapi";
+				}
 
 				self::$log_enabled = get_option('duitku_debug') == 'yes' ? true : false;
 
@@ -223,11 +227,6 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 					'customerDetail' => $customerDetails,
 					'itemDetails' => $item_details
 				);
-				
-				if ($this->payment_method == "MG") {
-					$url = $this->endpoint . '/api/merchant/creditcard/inquiry';
-					$params['credCode'] = $this->credCode;
-				}
 
 				$headers = array('Content-Type' => 'application/json');
 				

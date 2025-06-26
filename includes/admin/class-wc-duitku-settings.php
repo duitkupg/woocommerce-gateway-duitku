@@ -97,6 +97,8 @@ class Duitku_Settings {
 						wc()->session->set('chosen_payment_method', 'duitku_linkaja_applink');
 					}elseif ($chosen_method === 'duitku_nusapay_qris' ) {
 						wc()->session->set('chosen_payment_method', 'duitku_nusapay_qris');
+					}elseif ($chosen_method === 'duitku_bni_qris' ) {
+						wc()->session->set('chosen_payment_method', 'duitku_bni_qris');
 					}
 					else {
 						wc()->session->set('chosen_payment_method', $chosen_method);
@@ -197,6 +199,8 @@ class Duitku_Settings {
 			WC()->cart->add_fee(__('Surcharge', 'wc-duitku'), self::get_fee('BV') );
 		}elseif ( $chosen_gateway === 'duitku_nusapay_qris' ) {
 			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('SQ') );
+		}elseif ( $chosen_gateway === 'duitku_bni_qris' ) {
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('IQ') );
 		}
 		else {
         error_log('Surcharge not added for chosen gateway: ' . $chosen_gateway);
@@ -221,7 +225,12 @@ class Duitku_Settings {
 		  }
 		}
 
-		$endpoint	= rtrim(get_option('duitku_endpoint'), '/');
+		$environment	= (get_option('duitku_environment'));
+		if ($environment == "production") {
+			$endpoint = "https://passport.duitku.com/webapi";
+		} else {
+			$endpoint = "https://sandbox.duitku.com/webapi";
+		}
 		$amount		= CEIL( WC()->cart->cart_contents_total + WC()->cart->shipping_total - WC()->cart->tax_total + $feeAmount );
 		$datetime	= date('Y-m-d H:i:s', time());
 
@@ -339,12 +348,16 @@ class Duitku_Settings {
 				'default' => '',
 			),
 			array(
-				'title' => esc_html('Duitku Endpoint', 'wc_duitku'),
-				'desc' => '<br />' . __('Duitku endpoint API. Mohon isi merchant code dan api key sebelum mengakses endpoint.', 'wc-duitku'),
-				'id' => self::$option_prefix . '_endpoint',
-				'type' => 'text',
+				'title' => esc_html('Duitku Environment', 'wc_duitku'),
+				'desc' => '<br />' . __('Duitku Environment API. Mohon isi merchant code dan api key sebelum mengakses environment.', 'wc-duitku'),
+				'id' => self::$option_prefix . '_environment',
+				'type'        => 'select',
+				'options'     => [
+					'sandbox' 		=> 'Sandbox',
+					'production'    => 'Production',
+				],
+				'default'     => 'sandbox',
 				'css' => 'width:25em;',
-				'default' => '',
 			),
 			array(
 				'title' => esc_html('Duitku Prefix', 'wc_duitku'),
@@ -354,13 +367,6 @@ class Duitku_Settings {
 				'css' => 'width:25em;',
 				'default' => '',
 				'maxlength' => 2,
-			),
-			array(
-				'title' => esc_html('Credential Code', 'wc_duitku'),
-				'desc' => '<br />' . esc_html('Masukkan kode kredensial anda. Kode ini hanya digunakan untuk payment method Credit Card MIGS.', 'wc-duitku'),
-				'id' => self::$option_prefix . '_credential_code',
-				'type' => 'text',
-				'default' => '',
 			),
 			array(
 				'title' => esc_html('Duitku Debug', 'wc_duitku'),
