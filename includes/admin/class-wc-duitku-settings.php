@@ -367,7 +367,7 @@ class Duitku_Settings {
 			array(
 				'title' => esc_html('Duitku Debug', 'wc_duitku'),
 				'desc' => '<br />' . sprintf(__('Duitku Log dapat digunakan untuk melihat event, seperti notifikasi pembayaran.
-                	<code>%s</code> ', 'woothemes'), wc_get_log_file_path('duitku')),
+                	<code>%s</code> ', 'woothemes'), WC_Log_Handler_File::get_log_file_path('duitku')),
 				'id' => self::$option_prefix . '_debug',
 				'type' => 'checkbox',
 				'default' => 'no',
