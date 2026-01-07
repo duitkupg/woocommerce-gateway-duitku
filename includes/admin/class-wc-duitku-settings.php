@@ -97,6 +97,12 @@ class Duitku_Settings {
 						wc()->session->set('chosen_payment_method', 'duitku_linkaja_applink');
 					}elseif ($chosen_method === 'duitku_nusapay_qris' ) {
 						wc()->session->set('chosen_payment_method', 'duitku_nusapay_qris');
+					}elseif ($chosen_method === 'duitku_tokopedia_card_payment' ) {
+						wc()->session->set('chosen_payment_method', 'duitku_tokopedia_card_payment');
+					}elseif ($chosen_method === 'duitku_tokopedia_e_wallet' ) {
+						wc()->session->set('chosen_payment_method', 'duitku_tokopedia_e_wallet');
+					}elseif ($chosen_method === 'duitku_tokopedia_others' ) {
+						wc()->session->set('chosen_payment_method', 'duitku_tokopedia_others');
 					}
 					else {
 						wc()->session->set('chosen_payment_method', $chosen_method);
@@ -197,6 +203,12 @@ class Duitku_Settings {
 			WC()->cart->add_fee(__('Surcharge', 'wc-duitku'), self::get_fee('BV') );
 		}elseif ( $chosen_gateway === 'duitku_nusapay_qris' ) {
 			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('SQ') );
+		}elseif ( $chosen_gateway === 'duitku_tokopedia_card_payment' ) {
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('T1') );
+		}elseif ( $chosen_gateway === 'duitku_tokopedia_e_wallet' ) {
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('T2') );
+		}elseif ( $chosen_gateway === 'duitku_tokopedia_others' ) {
+			WC()->cart->add_fee( __('Surcharge', 'wc-duitku'), self::get_fee('T3') );
 		}
 		else {
         error_log('Surcharge not added for chosen gateway: ' . $chosen_gateway);
