@@ -67,11 +67,11 @@
 					'title' => __('Expired Period', 'wc-duitku'),
 					'type' => 'number',
 					'text', 'description' => __('', 'wc-duitku'),
-					'description' => __('Masa berlaku transaksi sebelum kedaluwarsa. example <code>1 - 30 ( menit )</code>', 'wc-duitku'),
+					'description' => __('Masa berlaku transaksi sebelum kedaluwarsa. example <code>1 - 1440 ( menit )</code>', 'wc-duitku'),
 					'default' => __('30', 'wc-duitku'),
 					'custom_attributes' => array(
 						'min'       =>  1,
-						'max'       =>  30,
+						'max'       =>  1440,
 					),
 				  ),
 		);
