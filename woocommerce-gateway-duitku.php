@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: Duitku Payment Gateway
-Description: Duitku Payment Gateway API V2: 2.11.12
-Version: 2.11.12
+Description: Duitku Payment Gateway API V2: 2.11.13
+Version: 2.11.13
 
 Author: Duitku
 Author URI: https://www.duitku.com/
@@ -103,8 +103,13 @@ improvement 2.11.9 to 2.11.10
 improvement 2.11.10 to 2.11.11
 - Woocommerce Duitku Payment Gateway API V2 Support Blocks Checkout
 
-improvement 2.11.10 to 2.11.12
+improvement 2.11.11 to 2.11.12
 - Add new payment Nusapay QRIS
+
+improvement 2.11.12 to 2.11.13
+- Remove Depreceated
+- Update Setting from Endpoint input to Environment dropdown
+- Update URL for payment MG to use V2 Inquiry
  */
 
 // Exit if accessed directly.

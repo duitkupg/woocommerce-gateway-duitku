@@ -3,14 +3,14 @@
 Plugin Name:  Duitku Payment Gateway
 Plugin URI:   https://docs.duitku.com/#woocommerce-duitku
 Description:  Duitku Payment Gateway V2 API
-Version:      2.11.12
+Version:      2.11.13
 Author:       Duitku Development Team
 Contributors: anggiyawan@duitku.com, hanithiojuwono, rayhanduitku
 Author URI:   http://duitku.com
 Tags:         paymentgateway, duitku, BCA, Mandiri, BRI, CIMB, BNI, Permata, ATM Bersama, CIMB Niaga, Maybank, Alfamart, Pegadaian, Pos Indonesia, OVO, Indodana, Shopee, Artha Graha, Sampoerna, LinkAja, DANA, Indomaret, PosPay, BRIVA, Nobu, ATOME
 Requires at least: 4.7
 Tested up to: 6.7.2
-Stable tag: 2.11.12
+Stable tag: 2.11.13
 Requires PHP: 7.3 or Higher
 Author URI:   http://duitku.com
 License:      GPLv2 or Later
