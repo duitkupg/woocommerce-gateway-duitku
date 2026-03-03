@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: Duitku Payment Gateway
-Description: Duitku Payment Gateway API V2: 2.11.13
-Version: 2.11.13
+Description: Duitku Payment Gateway API V2: 2.11.14
+Version: 2.11.14
 
 Author: Duitku
 Author URI: https://www.duitku.com/
@@ -110,6 +110,11 @@ improvement 2.11.12 to 2.11.13
 - Remove Depreceated
 - Update Setting from Endpoint input to Environment dropdown
 - Update URL for payment MG to use V2 Inquiry
+
+improvement 2.11.13 to 2.11.14
+- Add new payment Tokopedia Card Payment
+- Add new payment Tokopedia E-Wallet
+- Add new payment Tokopedia Others
  */
 
 // Exit if accessed directly.
@@ -174,6 +179,9 @@ class WC_Duitku_Payments{
 			$methods[] = 'WC_Gateway_Duitku_VA_DANAMON_H2H';
 			$methods[] = 'WC_Gateway_Duitku_VA_BSI';
 			$methods[] = 'WC_Gateway_Duitku_NUSAPAY_QRIS';
+			$methods[] = 'WC_Gateway_Duitku_TOKOPEDIA_CARD_PAYMENT';
+			$methods[] = 'WC_Gateway_Duitku_TOKOPEDIA_E_WALLET';
+			$methods[] = 'WC_Gateway_Duitku_TOKOPEDIA_OTHERS';
 			return $methods;
 		}
 
@@ -229,6 +237,9 @@ class WC_Duitku_Payments{
 			require_once 'includes/blocks/class-wc-gateway-duitku-va-danamon-h2h-blocks.php';
 			require_once 'includes/blocks/class-wc-gateway-duitku-va-bsi-blocks.php';
 			require_once 'includes/blocks/class-wc-gateway-duitku-nusapay-qris-blocks.php';
+			require_once 'includes/blocks/class-wc-gateway-duitku-tokopedia-card-payment-blocks.php';
+			require_once 'includes/blocks/class-wc-gateway-duitku-tokopedia-e-wallet-blocks.php';
+			require_once 'includes/blocks/class-wc-gateway-duitku-tokopedia-others-blocks.php';
 			add_action(
 				'woocommerce_blocks_payment_method_type_registration',
 				function( Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry $payment_method_registry ) {
@@ -263,6 +274,9 @@ class WC_Duitku_Payments{
 					$payment_method_registry->register( new WC_Gateway_Duitku_VA_DANAMON_H2H_Blocks() );
 					$payment_method_registry->register( new WC_Gateway_Duitku_VA_BSI_Blocks() );
 					$payment_method_registry->register( new WC_Gateway_Duitku_NUSAPAY_QRIS_Blocks() );
+					$payment_method_registry->register( new WC_Gateway_Duitku_TOKOPEDIA_CARD_PAYMENT_Blocks() );
+					$payment_method_registry->register( new WC_Gateway_Duitku_TOKOPEDIA_E_WALLET_Blocks() );
+					$payment_method_registry->register( new WC_Gateway_Duitku_TOKOPEDIA_OTHERS_Blocks() );
 				}
 			);
 		}

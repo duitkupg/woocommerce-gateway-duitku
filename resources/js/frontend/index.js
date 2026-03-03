@@ -142,4 +142,6 @@ registerDuitkuPaymentMethod('duitku_va_artha', ('Duitku VA Artha Graha', 'wc-dui
 registerDuitkuPaymentMethod('duitku_va_danamon_h2h', ('Duitku VA Danamon', 'wc-duitku'));
 registerDuitkuPaymentMethod('duitku_va_bsi', ('Duitku VA BSI', 'wc-duitku'));
 registerDuitkuPaymentMethod('duitku_nusapay_qris', ('Duitku Nusapay QRIS', 'wc-duitku'));
-
+registerDuitkuPaymentMethod('duitku_tokopedia_card_payment', ('Duitku Tokopedia Card Payment', 'wc-duitku'));
+registerDuitkuPaymentMethod('duitku_tokopedia_e_wallet', ('Duitku Tokopedia E-Wallet', 'wc-duitku'));
+registerDuitkuPaymentMethod('duitku_tokopedia_others', ('Duitku Tokopedia Others', 'wc-duitku'));
