@@ -213,7 +213,7 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 				//$this->log("api key process payment" . $this->apiKey);
 
 				//generate Signature
-				$signature = md5($this->merchantCode . $this->prefix . $order_id . $totalAmount . $this->apiKey);
+				$signature = hash_hmac('sha256',$this->merchantCode . $this->prefix . $order_id . $totalAmount , $this->apiKey);
 				
 				if ( isset($this->tipe) ) {
 					$payment_method = $this->tipe;
@@ -359,7 +359,7 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 				
 				
 				//signature validation
-				$signature = md5($this->merchantCode . $amount . $this->prefix . $order_id . $this->apiKey);
+				$signature = hash_hmac('sha256',$this->merchantCode . $amount . $this->prefix . $order_id , $this->apiKey);
 				if($reqSignature == $signature){
 					$this->log("Signature valid");
 				}else{
@@ -449,7 +449,7 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 				$url = esc_url_raw($this->endpoint) . '/api/merchant/transactionStatus';
 
 				//generate Signature
-				$signature = md5($this->merchantCode . $order_id . $this->apiKey);
+				$signature = hash_hmac('sha256',$this->merchantCode . $order_id , $this->apiKey);
 
 				// Prepare Parameters
 				$params = array(
