@@ -332,12 +332,6 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 					throw new Exception(__('wrong query string please contact admin.',
 						'duitku'));
 				}
-
-				//if notification only redirect to notification page
-				if (!empty($params['status']) && $params['status'] == 'notify') {
-					$this->notify_response($params);
-					exit;
-				}
 				
 				//if callback request proceed to payment
 
@@ -407,38 +401,6 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 				}
 
 				exit;
-			}
-
-			function notify_response($params) {				
-				
-				if (empty($params['resultCode']) || empty($params['merchantOrderId'])) {
-					throw new Exception(__('wrong query string please contact admin.', 'duitku'));
-				}	
-
-				$order_id = wc_clean(stripslashes($params['merchantOrderId']));
-				$order_id = substr( $order_id, strlen( $this->prefix ) );
-				$order = new WC_Order($order_id);
-											
-				if ($params['resultCode'] == '00') {
-						$order->add_order_note("Transaksi untuk order ID " . $order_id . " telah diproses, menunggu verifikasi hasil pembayaran");
-						$this->log('Notify Response. Transaksi untuk order ID ' .$order_id . " result code " .$params['resultCode']);
-						WC()->cart->empty_cart();
-            			return wp_redirect($order->get_checkout_order_received_url());
-				}else if ($params['resultCode'] == '01') {
-						$order->add_order_note("Transaksi untuk order ID " . $order_id . " sedang diproses");
-						$this->log('Notify Response. Transaksi untuk order ID ' .$order_id . " result code " .$params['resultCode']);
-
-						wc_add_notice('Melakukan pembatalan pembayaran untuk order ID ' . $order_id);
-
-						WC()->cart->empty_cart();
-						return wp_redirect(home_url('/my-account/orders/'));
-				} else {
-						$order->add_order_note("Pembayaran dengan Duitku untuk order ID" . $order_id . " tidak berhasil, dengan result code " .$params['resultCode']);
-						$this->log('Notify Response. Transaksi untuk order ID ' .$order_id . " result code " .$params['resultCode']);
-						$this->log('back to checkout page');
-						WC()->cart->empty_cart();
-						return wp_redirect(home_url('/my-account/orders/'));          			
-				}
 			}
 
 			/**
