@@ -319,7 +319,7 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 				$params['reference'] = isset($_REQUEST['reference'])? sanitize_text_field($_REQUEST['reference']): null;
 				$params['status'] = isset($_REQUEST['status'])? sanitize_text_field($_REQUEST['status']): null;
 
-				$params['merchantOrderId'] = str_replace($this->prefix,'',$params['merchantOrderId']);
+				$params['merchantOrderId'] = substr( $params['merchantOrderId'], strlen( $this->prefix ) );;
 
 				if (empty($params['resultCode']) || empty($params['merchantOrderId']) || empty($params['reference'])) {
 					throw new Exception(__('wrong query string please contact admin.',
@@ -401,7 +401,7 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 				}	
 
 				$order_id = wc_clean(stripslashes($params['merchantOrderId']));
-				$order_id = str_replace($this->prefix,'',$order_id);
+				$order_id = substr( $order_id, strlen( $this->prefix ) );
 				$order = new WC_Order($order_id);
 											
 				if ($params['resultCode'] == '00') {
