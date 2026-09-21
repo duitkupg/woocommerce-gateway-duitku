@@ -319,12 +319,17 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 				$params['reference'] = isset($_REQUEST['reference'])? sanitize_text_field($_REQUEST['reference']): null;
 				$params['status'] = isset($_REQUEST['status'])? sanitize_text_field($_REQUEST['status']): null;
 
+				if ( 0 !== strpos( $params['merchantOrderId'], $this->prefix ) ) {
+					throw new Exception(__('invalid order, please contact admin.',
+						'duitku'));
+				}
+
 				$params['merchantOrderId'] = substr( $params['merchantOrderId'], strlen( $this->prefix ) );;
+
 
 				if (empty($params['resultCode']) || empty($params['merchantOrderId']) || empty($params['reference'])) {
 					throw new Exception(__('wrong query string please contact admin.',
 						'duitku'));
-					return;
 				}
 
 				//if notification only redirect to notification page
@@ -339,11 +344,20 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 				$result_Code = wc_clean(stripslashes($params['resultCode']));
 				$reference = wc_clean(stripslashes($params['reference']));
 				
+				if ( ! ctype_digit( $order_id ) ) {
+					$this->log("Invalid order ID received in callback: " . $order_id);
+					exit;
+				}
+
 				$params['signature']= isset($_REQUEST['signature'])? sanitize_text_field($_REQUEST['signature']): null;
 				$reqSignature = wc_clean(stripslashes($params['signature']));
 
 				$order = new WC_Order($order_id);
-				
+				if ( !$order ) {
+					$this->log("Order not found: " . $order_id);
+					exit;
+				}
+
 				$item_details = [];
 				
 				$fees_data = $this->process_fees($order, $item_details);
