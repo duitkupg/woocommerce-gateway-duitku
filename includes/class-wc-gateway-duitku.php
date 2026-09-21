@@ -234,7 +234,8 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 					'phoneNumber' => $order->billing_phone,
 					'signature' => $signature,
 					'expiryPeriod' => $this->expiryPeriod,
-					'returnUrl' => esc_url_raw($this->redirect_url) . '?status=notify',
+					'returnUrl' => esc_url_raw(WC()->cart->get_checkout_url()),
+					// 'returnUrl' => esc_url_raw($this->redirect_url) . '?status=notify',
 					'callbackUrl' => esc_url_raw($this->redirect_url),
 					'customerDetail' => $customerDetails,
 					'itemDetails' => $item_details
