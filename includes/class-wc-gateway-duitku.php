@@ -210,7 +210,6 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 					'billingAddress' => $billing_address,
 					'shippingAddress' => $billing_address
 				);
-				//$this->log("api key process payment" . $this->apiKey);
 
 				//generate Signature
 				$signature = hash_hmac('sha256',$this->merchantCode . $this->prefix . $order_id . $totalAmount , $this->apiKey);
@@ -253,11 +252,10 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 
 				// show request for inquiry
 				$this->log("create a request for inquiry");
-				$this->log(json_encode($params, true));
 
 				// Send this payload to Duitku.com for processing
 				$response = wp_remote_post($url, array(
-					'method' => 'POST', 'body' => json_encode($params), 'timeout' => 90, 'sslverify' => false, 'headers' => $headers,
+					'method' => 'POST', 'body' => json_encode($params), 'timeout' => 90, 'sslverify' => true, 'headers' => $headers,
 				));
 
 				// Retrieve the body's resopnse if no errors found
@@ -277,11 +275,6 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 
 				// Parse the response into something we can read
 				$resp = json_decode($response_body);
-
-				//log response from server
-				$this->log('response body: ' . $response_body . 'for order id: ' . $order_id);
-				$this->log('response HTTP code: ' . $response_code);
-				$this->log($url);
 				
 				// means the transaction was a success
 				if ($response_code == '200') {
@@ -302,7 +295,7 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 					$this->log('Inquiry failed for order Id ' . $order->get_order_number());
 					// Transaction was not succesful Add notice to the cart
 
-					if ($response_code = "400") {
+					if ($response_code == "400") {
 						$order->add_order_note( 'Error:' .  $resp->Message);
 						throw new Exception($resp->Message);
 					}
@@ -402,13 +395,9 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 			}
 
 			function notify_response($params) {				
-			
-				// log request from Duitku server
-				$this->log(var_export($params, true));
 				
 				if (empty($params['resultCode']) || empty($params['merchantOrderId'])) {
 					throw new Exception(__('wrong query string please contact admin.', 'duitku'));
-						return false;
 				}	
 
 				$order_id = wc_clean(stripslashes($params['merchantOrderId']));
@@ -460,31 +449,22 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 
 				$headers = array('Content-Type' => 'application/json');
 
-				// show request for inquiry
-				$this->log("validate transaction:");
-				$this->log(var_export(json_encode($params), true));
-				$this->log("validate url: " . $url);
-
 				$response = wp_remote_post($url, array(
 					'method' => 'POST', 
 					'body' => json_encode($params), 
 					'timeout' => 90, 
-					'sslverify' => false, 
+					'sslverify' => true, 
 					'headers' => $headers,
 				));
 
 				// Retrieve the body's resopnse if no errors found
 				$response_body = wp_remote_retrieve_body($response);
 				$response_code = wp_remote_retrieve_response_code($response);
-				$resp = json_decode($response_body);
-
-				$this->log("response Body validate transaction: " . $response_body);
-				$this->log("receive response HTTP Code: " . $response_code . " with status code check transaction: " . $resp->statusCode);
 
 				if ($response_code == '200') {
 					return $response_body;
 				} else {
-					$this->log($response_body);
+					$this->log("validate transaction failed for order Id " . $order_id . " with response code " . $response_code);
 				}
 
 				exit;
