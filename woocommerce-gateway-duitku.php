@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: Duitku Payment Gateway
-Description: Duitku Payment Gateway API V2: 2.11.14
-Version: 2.11.14
+Description: Duitku Payment Gateway API V2: 2.11.15
+Version: 2.11.15
 
 Author: Duitku
 Author URI: https://www.duitku.com/
@@ -115,6 +115,9 @@ improvement 2.11.13 to 2.11.14
 - Add new payment Tokopedia Card Payment
 - Add new payment Tokopedia E-Wallet
 - Add new payment Tokopedia Others
+
+improvement 2.11.14 to 2.11.15
+- Security Upgrade signature hashing algorithm from SHA256/MD5 to HMAC-SHA256
  */
 
 // Exit if accessed directly.

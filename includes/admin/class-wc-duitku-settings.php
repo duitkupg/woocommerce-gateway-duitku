@@ -246,7 +246,7 @@ class Duitku_Settings {
 		$url = $endpoint . '/api/merchant/paymentmethod/getpaymentmethod';
 
 		//generate Signature
-		$signature = hash('sha256', get_option('duitku_merchant_code') . $amount . $datetime . get_option('duitku_api_key'));
+		$signature = hash_hmac('sha256', get_option('duitku_merchant_code') . $amount . $datetime , get_option('duitku_api_key'));
 		// Prepare Parameters
 		$params = array(
 			'merchantCode'	=> get_option('duitku_merchant_code'),
