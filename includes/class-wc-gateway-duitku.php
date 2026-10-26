@@ -138,7 +138,7 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 				//Total Amount Include Fee
 				$totalAmount = intval($order->order_total); //Include
 
-				$this->log('Generating payment form for order ' . $order->get_order_number() . '. Notify URL: ' . $this->redirect_url);
+				$this->log('Generating payment form for order ' . $order->get_order_number() . '. Callback URL: ' . $this->redirect_url);
 
 				//endpoint for inquiry
 				$url = $this->endpoint . '/api/merchant/v2/inquiry';
@@ -257,7 +257,7 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 
 				// Send this payload to Duitku.com for processing
 				$response = wp_remote_post($url, array(
-					'method' => 'POST', 'body' => json_encode($params), 'timeout' => 90, 'sslverify' => false, 'headers' => $headers,
+					'method' => 'POST', 'body' => json_encode($params), 'timeout' => 90, 'sslverify' => true, 'headers' => $headers,
 				));
 
 				// Retrieve the body's resopnse if no errors found
@@ -302,7 +302,7 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 					$this->log('Inquiry failed for order Id ' . $order->get_order_number());
 					// Transaction was not succesful Add notice to the cart
 
-					if ($response_code = "400") {
+					if ($response_code == "400") {
 						$order->add_order_note( 'Error:' .  $resp->Message);
 						throw new Exception($resp->Message);
 					}
@@ -326,12 +326,16 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 				$params['reference'] = isset($_REQUEST['reference'])? sanitize_text_field($_REQUEST['reference']): null;
 				$params['status'] = isset($_REQUEST['status'])? sanitize_text_field($_REQUEST['status']): null;
 
-				$params['merchantOrderId'] = str_replace($this->prefix,'',$params['merchantOrderId']);
+				if ( 0 !== strpos( $params['merchantOrderId'], $this->prefix ) ) {
+					throw new Exception(__('invalid order, please contact admin.',
+						'duitku'));
+				}
+
+				$params['merchantOrderId'] = substr( $params['merchantOrderId'], strlen( $this->prefix ) );
 
 				if (empty($params['resultCode']) || empty($params['merchantOrderId']) || empty($params['reference'])) {
 					throw new Exception(__('wrong query string please contact admin.',
 						'duitku'));
-					return;
 				}
 
 				
@@ -341,11 +345,21 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 				$order_id = wc_clean(stripslashes($params['merchantOrderId']));
 				$result_Code = wc_clean(stripslashes($params['resultCode']));
 				$reference = wc_clean(stripslashes($params['reference']));
+
+				if ( ! ctype_digit( $order_id ) ) {
+					$this->log("Invalid order ID received in callback: " . $order_id);
+					exit;
+				}
 				
 				$params['signature']= isset($_REQUEST['signature'])? sanitize_text_field($_REQUEST['signature']): null;
 				$reqSignature = wc_clean(stripslashes($params['signature']));
 
-				$order = new WC_Order($order_id);
+				$order = wc_get_order($order_id);
+
+				if ( !$order ) {
+					$this->log("Order not found: " . $order_id);
+					exit;
+				}
 				
 				$item_details = [];
 				
@@ -364,20 +378,29 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 				}
 
 				if($result_Code == "00"){
-					$respon = json_decode($this->validate_transaction($this->prefix . $order_id));
+					$respon = json_decode($this->validate_transaction($order_id));
 					if($respon->statusCode == "00"){
 						$order->payment_complete();
 						$order->add_order_note(__("Pembayaran telah dilakukan melalui Duitku dengan ID " . $this->prefix . $order_id . ' dan No Reference ' . $reference, 'woocommerce'));
 						$this->log("Callback diterima. Pembayaran dengan order ID " . $order_id . " telah berhasil.");
+
+						status_header( 200 );
+						echo 'Callback Success';
 					}else if($respon->statusCode == "01"){
 						$order->add_order_note( "Pembayaran menggunakan Duitku dengan order ID " . $this->prefix . $order_id . "reference " . $reference . " tertunda.");
 						$this->log("Callback diterima. Pembayaran dengan order ID " . $order_id . " tertunda.");
+					}else if($respon->statusCode == "02"){
+						$order->add_order_note( "Pembayaran menggunakan Duitku dengan order ID " . $this->prefix . $order_id . "reference " . $reference . " gagal.");
+						$this->log("Callback diterima. Pembayaran dengan order ID " . $order_id . " gagal.");
 					}else{
 						$order->add_order_note("Callback diterima dengan result code " . $result_Code . " untuk order ID " . $this->prefix . $order_id . " dan hasil validasi cek transaksi status code " . $respon->statusCode);
 						$this->log("Callback diterima dengan result code " . $result_Code . " untuk Order ID " . $order_id . " dan hasil validasi cek transaksi status code " . $respon->statusCode);
+
+						status_header( 400 );
+						echo 'Callback Success, but validation failed';
 					}
 				}else if($result_Code == "01"){
-					$respon = json_decode($this->validate_transaction($this->prefix . $order_id));
+					$respon = json_decode($this->validate_transaction($order_id));
 					if($respon->statusCode == "02"){
 						$order->update_status("failed");
 						$order->add_order_note("Pembayaran menggunakan Duitku dengan order ID " . $this->prefix . $order_id . "gagal");
@@ -403,18 +426,23 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 			 */
 			protected function validate_transaction($order_id) {
 
-				$order = new WC_Order($order_id);
+				$order = wc_get_order($order_id);
+
+				if ( !$order ) {
+					$this->log("Order not found when validate transaction: " . $order_id);
+					exit;
+				}
 
 				//endpoint for transactionStatus
 				$url = esc_url_raw($this->endpoint) . '/api/merchant/transactionStatus';
 
 				//generate Signature
-				$signature = hash_hmac('sha256',$this->merchantCode . $order_id , $this->apiKey);
+				$signature = hash_hmac('sha256',$this->merchantCode . $this->prefix . $order_id , $this->apiKey);
 
 				// Prepare Parameters
 				$params = array(
 					'merchantCode' => $this->merchantCode, // API Key Merchant /
-					'merchantOrderId' => $order_id,
+					'merchantOrderId' => $this->prefix . $order_id,
 					'signature' => $signature
 				);
 
@@ -429,7 +457,7 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 					'method' => 'POST', 
 					'body' => json_encode($params), 
 					'timeout' => 90, 
-					'sslverify' => false, 
+					'sslverify' => true, 
 					'headers' => $headers,
 				));
 
@@ -444,7 +472,7 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 				if ($response_code == '200') {
 					return $response_body;
 				} else {
-					$this->log($response_body);
+					$this->log("validate transaction failed for order Id " . $order_id . " with response code " . $response_code);
 				}
 
 				exit;

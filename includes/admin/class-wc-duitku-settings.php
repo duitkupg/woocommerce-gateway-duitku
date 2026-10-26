@@ -259,7 +259,7 @@ class Duitku_Settings {
 
 
 		$response = wp_remote_post($url, array(
-			'method' => 'POST', 'body' => json_encode($params), 'timeout' => 90, 'sslverify' => false, 'headers' => $headers,
+			'method' => 'POST', 'body' => json_encode($params), 'timeout' => 90, 'sslverify' => true, 'headers' => $headers,
 		));
 
 		// Retrieve the body's resopnse if no errors found
