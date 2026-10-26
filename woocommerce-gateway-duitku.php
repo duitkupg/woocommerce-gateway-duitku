@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: Duitku Payment Gateway
-Description: Duitku Payment Gateway API V2: 2.11.15
-Version: 2.11.15
+Description: Duitku Payment Gateway API V2: 2.11.16
+Version: 2.11.16
 
 Author: Duitku
 Author URI: https://www.duitku.com/
@@ -118,6 +118,10 @@ improvement 2.11.13 to 2.11.14
 
 improvement 2.11.14 to 2.11.15
 - Security Upgrade signature hashing algorithm from SHA256/MD5 to HMAC-SHA256
+
+improvement 2.11.15 to 2.11.16
+- Fix Return Url
+
  */
 
 // Exit if accessed directly.
