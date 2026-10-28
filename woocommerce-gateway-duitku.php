@@ -118,6 +118,10 @@ improvement 2.11.13 to 2.11.14
 
 improvement 2.11.14 to 2.11.15
 - Security Upgrade signature hashing algorithm from SHA256/MD5 to HMAC-SHA256
+- Fix Return Url
+- Update script for E-Wallet LinkAja and Shopeepay App, to only show in mobile device in checkout page and block checkout page
+- Improve Request, Callback, and validation 
+
  */
 
 // Exit if accessed directly.
@@ -130,10 +134,31 @@ class WC_Duitku_Payments{
 		add_action('plugins_loaded', array(__CLASS__, 'woocommerce_duitku_init'), 0);
 		add_action('woocommerce_blocks_loaded', array(__CLASS__, 'woocommerce_gateway_duitku_woocommerce_block_support'));
 		add_action('wp_enqueue_scripts', array(__CLASS__, 'duitku_dom_manipulate_init'));
+		add_action( 'before_woocommerce_init', function () {
+			if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+				\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility(
+					'cart_checkout_blocks', __FILE__, true
+				);
+			}
+		} );
 	}
 
-	public static function duitku_dom_manipulate_init(){
-		wp_enqueue_script( 'duitku-dom-manipulate-js', plugins_url('/includes/assets/js/duitku_dom_manipulate.js', __FILE__ ));
+	public static function duitku_dom_manipulate_init() {
+		// Only on checkout, and only for the classic (shortcode) checkout
+		if ( ! function_exists( 'is_checkout' ) || ! is_checkout() ) {
+			return;
+		}
+		// if ( has_block( 'woocommerce/checkout' ) ) {
+		// 	return; // block checkout uses its own JS, see below
+		// }
+
+		wp_enqueue_script(
+			'duitku-dom-manipulate-js',
+			plugins_url( '/includes/assets/js/duitku_dom_manipulate.js', __FILE__ ),
+			array(),
+			'1.0.0',
+			true
+		);
 	}
 
 	public static function woocommerce_duitku_init(){
