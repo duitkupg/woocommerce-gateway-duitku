@@ -374,6 +374,12 @@ class Duitku_Payment_gateway extends WC_Payment_Gateway {
 					$this->log("Order not found: " . $order_id);
 					exit;
 				}
+
+				if ( $order->is_paid() ) {
+					status_header( 200 );
+					$this->log("Order already marked as paid: " . $order_id);
+					exit;
+				}
 				
 				$item_details = [];
 				
