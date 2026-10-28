@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: Duitku Payment Gateway
-Description: Duitku Payment Gateway API V2: 2.11.18
-Version: 2.11.18
+Description: Duitku Payment Gateway API V2: 2.11.15
+Version: 2.11.15
 
 Author: Duitku
 Author URI: https://www.duitku.com/
@@ -118,14 +118,8 @@ improvement 2.11.13 to 2.11.14
 
 improvement 2.11.14 to 2.11.15
 - Security Upgrade signature hashing algorithm from SHA256/MD5 to HMAC-SHA256
-
-improvement 2.11.15 to 2.11.16
 - Fix Return Url
-
-improvement 2.11.16 to 2.11.17
 - Update script for E-Wallet LinkAja and Shopeepay App, to only show in mobile device in checkout page and block checkout page
-
-improvement 2.11.17 to 2.11.18
 - Improve Request, Callback, and validation 
 
  */

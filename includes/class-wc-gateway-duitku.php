@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @author   Duitku
  * @extends  WC_Payment_Gateway
- * @version  2.11.11
+ * @version  2.11.15
  */
 
 class Duitku_Payment_gateway extends WC_Payment_Gateway {

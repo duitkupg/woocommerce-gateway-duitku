@@ -3,14 +3,14 @@
 Plugin Name:  Duitku Payment Gateway
 Plugin URI:   https://docs.duitku.com/#woocommerce-duitku
 Description:  Duitku Payment Gateway V2 API
-Version:      2.11.18
+Version:      2.11.15
 Author:       Duitku Development Team
 Contributors: rayhanduitku, yudhiwinantoro
 Author URI:   http://duitku.com
 Tags:         paymentgateway, duitku, BCA, Mandiri, BRI, CIMB, BNI, Permata, ATM Bersama, CIMB Niaga, Maybank, Alfamart, Pegadaian, Pos Indonesia, OVO, Indodana, Shopee, Artha Graha, Sampoerna, LinkAja, DANA, Indomaret, PosPay, BRIVA, Nobu, ATOME
 Requires at least: 4.7
 Tested up to: 6.7.2
-Stable tag: 2.11.18
+Stable tag: 2.11.15
 Requires PHP: 7.3 or Higher
 Author URI:   http://duitku.com
 License:      GPLv2 or Later
@@ -110,16 +110,10 @@ Integrating online payments with Duitku is very easy, web integration using our 
 
 == Changelog ==
 
-= 2.11.17 to 2.11.18
-- Improve Request, Callback, and validation 
-
-= 2.11.16 to 2.11.17
-- Update script for E-Wallet LinkAja and Shopeepay App, to only show in mobile device in checkout page and block checkout page
-
-= 2.11.15 to 2.11.16
-- Fix Return Url
-
 = 2.11.15 Apr 21, 2026 =
+- Improve Request, Callback, and validation 
+- Update script for E-Wallet LinkAja and Shopeepay App, to only show in mobile device in checkout page and block checkout page
+- Fix Return Url
 - Security Upgrade signature hashing algorithm from SHA256/MD5 to HMAC-SHA256
 
 = 2.11.14 Jan 01, 2026 =
