@@ -45,7 +45,7 @@ abstract class WC_Gateway_Duitku_Blocks_Support extends AbstractPaymentMethodTyp
 			? require( $script_asset_path )
 			: array(
 				'dependencies' => array(),
-				'version'      => '2.11.11'
+				'version'      => '2.11.15',
 			);
 		$script_url        = WC_Duitku_Payments::plugin_url() . $script_path;
 
